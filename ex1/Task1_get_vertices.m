@@ -49,7 +49,7 @@ indice8=[1,2,3,4,5,7,8];
 mysave('../init8.txt',x8,y8,indice8);
 
 %Task1 compute initial pose
-m3d=importdata('../position_vertices_3d.txt');
+m3d=importdata('position_vertices_3d.txt');
 fx = 2960.37845;
 fy = 2960.37845;
 cx = 1841.68855;
