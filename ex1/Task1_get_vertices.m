@@ -1,52 +1,13 @@
 %% Task 1 get vertices
 
-init1=imread('../data/images/init_texture/DSC_9743.jpg');
-imshow(init1);
-[x1,y1]=ginput(6);
-indice1=[1,2,3,4,7,8];
-mysave('../init1.txt',x1,y1,indice1);
-
-init2=imread('../data/images/init_texture/DSC_9744.jpg');
-imshow(init2);
-[x2,y2]=ginput(7);
-indice2=[1,2,3,4,6,7,8];
-mysave('../init2.txt',x2,y2,indice2);
-
-init3=imread('../data/images/init_texture/DSC_9745.jpg');
-imshow(init3);
-[x3,y3]=ginput(6);
-indice3=[1,2,3,4,6,7];
-mysave('../init3.txt',x3,y3,indice3);
-
-init4=imread('../data/images/init_texture/DSC_9746.jpg');
-imshow(init4);
-[x4,y4]=ginput(7);
-indice4=[1,2,3,4,5,6,7];
-mysave('../init4.txt',x4,y4,indice4);
-
-init5=imread('../data/images/init_texture/DSC_9747.jpg');
-imshow(init5);
-[x5,y5]=ginput(6);
-indice5=[1,2,3,4,5,6];
-mysave('../init5.txt',x5,y5,indice5);
-
-init6=imread('../data/images/init_texture/DSC_9748.jpg');
-imshow(init6);
-[x6,y6]=ginput(7);
-indice6=[1,2,3,4,5,6,8];
-mysave('../init6.txt',x6,y6,indice6);
-
-init7=imread('../data/images/init_texture/DSC_9749.jpg');
-imshow(init7);
-[x7,y7]=ginput(6);
-indice7=[1,2,3,4,5,8];
-mysave('../init7.txt',x7,y7,indice7);
-
-init8=imread('../data/images/init_texture/DSC_9750.jpg');
-imshow(init8);
-[x8,y8]=ginput(7);
-indice8=[1,2,3,4,5,7,8];
-mysave('../init8.txt',x8,y8,indice8);
+initialAlignment('../data/images/init_texture/DSC_9743.jpg', '../ex1/init1.txt', [1,2,3,4,7,8])
+initialAlignment('../data/images/init_texture/DSC_9744.jpg', '../ex1/init2.txt', [1,2,3,4,6,7,8])
+initialAlignment('../data/images/init_texture/DSC_9745.jpg', '../ex1/init3.txt', [1,2,3,4,6,7])
+initialAlignment('../data/images/init_texture/DSC_9746.jpg', '../ex1/init4.txt', [1,2,3,4,5,6,7])
+initialAlignment('../data/images/init_texture/DSC_9747.jpg', '../ex1/init5.txt', [1,2,3,4,5,6])
+initialAlignment('../data/images/init_texture/DSC_9748.jpg', '../ex1/init6.txt', [1,2,3,4,5,6,8])
+initialAlignment('../data/images/init_texture/DSC_9749.jpg', '../ex1/init7.txt', [1,2,3,4,5,8])
+initialAlignment('../data/images/init_texture/DSC_9750.jpg', '../ex1/init8.txt', [1,2,3,4,5,7,8])
 
 %% Create 3D model and initialize camera intrinsics
 m3d=importdata('position_vertices_3d.txt');
