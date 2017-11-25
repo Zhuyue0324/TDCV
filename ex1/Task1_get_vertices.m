@@ -56,18 +56,44 @@ cx = 1841.68855;
 cy = 1235.23369;
 IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
 
+% run('../../../MATLAB/vlfeat-0.9.20/toolbox/vl_setup')
 
-m1=importdata('../init1.txt');
-d2=m1(:,1:2);
-d3=m3d(m1(:,3),:);
-[WO1,WL1] = estimateWorldCameraPose(d2,d3,IntrinsicMat,'MaxReprojectionError',10);
-init1=vl_impattern('../data/images/init_texture/DSC_9743.jpg');
+
+
+%% Estimate all poses
+[WO1,WL1] = poseEstimator('init1.txt'); % this function is defined down under
+[WO2,WL2] = poseEstimator('init2.txt');
+[WO3,WL3] = poseEstimator('init3.txt');
+[WO4,WL4] = poseEstimator('init4.txt');
+[WO5,WL5] = poseEstimator('init5.txt');
+[WO6,WL6] = poseEstimator('init6.txt');
+[WO7,WL7] = poseEstimator('init7.txt');
+[WO8,WL8] = poseEstimator('init8.txt');
+
+%% Plot the world points 
+%pcshow(d3,'VerticalAxis','Y','VerticalAxisDir','down',...
+%    'MarkerSize',30);
+%hold on
+%plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
+%hold off
+
+%%
+%init1=vl_impattern('../../data/images/init_texture/DSC_9743.jpg'); =>
+%fails because it's not a stock picture ... prefer:
+init1 = imread('../../data/images/init_texture/DSC_9743.jpg');
 image(init1);
-grey1=single(rgb2gray(init1));
-image(grey1);
-
-
-
+gray1=single(rgb2gray(init1));
+image(gray1);
+[f1,d1] = vl_sift(gray1);
+%view(f1,d1);
+perm = randperm(size(f1,2));
+sel = perm(1:50);
+h1 = vl_plotframe(f1(:,sel));
+h2 = vl_plotframe(f1(:,sel));
+set(h1,'color','k','linewidth',3);
+set(h2,'color','k','linewidth',2);
+simple_save('sift/f1',f1);
+simple_save('sift/d1',d1);
 
 
 
@@ -80,3 +106,25 @@ hold off
 
 %save('../init_coord.txt','x1','y1','-ascii');
 [A,B,C]=myransac(d2,5,10,2)
+
+%% Functions
+
+function [WO,WL] = poseEstimator(txtInput)
+    m = importdata(txtInput)
+    [WO,WL] = estimateWorldCameraPose(m(:,1:2),m3d(m(:,3),:),...
+        IntrinsicMat,'MaxReprojectionError',10)
+end
+
+function [] = test(f1)
+    simple_save('sift/f1',f1);
+end
+
+function view = visualizeSIFT(f,d)
+    perm = randperm(size(f,2));
+    sel = perm(1:50);
+    h1 = vl_plotframe(f(:,sel));
+    h2 = vl_plotframe(f(:,sel));
+    set(h1,'color','k','linewidth',3);
+    set(h2,'color','k','linewidth',2);
+    view = image(h1);
+end
