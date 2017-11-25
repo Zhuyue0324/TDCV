@@ -77,23 +77,9 @@ IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
 %plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
 %hold off
 
-%%
-%init1=vl_impattern('../../data/images/init_texture/DSC_9743.jpg'); =>
-%fails because it's not a stock picture ... prefer:
-init1 = imread('../../data/images/init_texture/DSC_9743.jpg');
-image(init1);
-gray1=single(rgb2gray(init1));
-image(gray1);
-[f1,d1] = vl_sift(gray1);
-%view(f1,d1);
-perm = randperm(size(f1,2));
-sel = perm(1:50);
-h1 = vl_plotframe(f1(:,sel));
-h2 = vl_plotframe(f1(:,sel));
-set(h1,'color','k','linewidth',3);
-set(h2,'color','k','linewidth',2);
-simple_save('sift/f1',f1);
-simple_save('sift/d1',d1);
+%% Compute descriptors for initial images
+compute_then_store_sift('../../data/images/init_texture/DSC_9743.jpg',...
+    true,'_init1');
 
 
 
@@ -115,16 +101,4 @@ function [WO,WL] = poseEstimator(txtInput)
         IntrinsicMat,'MaxReprojectionError',10)
 end
 
-function [] = test(f1)
-    simple_save('sift/f1',f1);
-end
 
-function view = visualizeSIFT(f,d)
-    perm = randperm(size(f,2));
-    sel = perm(1:50);
-    h1 = vl_plotframe(f(:,sel));
-    h2 = vl_plotframe(f(:,sel));
-    set(h1,'color','k','linewidth',3);
-    set(h2,'color','k','linewidth',2);
-    view = image(h1);
-end
