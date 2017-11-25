@@ -1,4 +1,4 @@
-%Task 1 get vertices
+%% Task 1 get vertices
 
 init1=imread('../data/images/init_texture/DSC_9743.jpg');
 imshow(init1);
@@ -48,7 +48,7 @@ imshow(init8);
 indice8=[1,2,3,4,5,7,8];
 mysave('../init8.txt',x8,y8,indice8);
 
-%Task1 compute initial pose
+%% Create 3D model and initialize camera intrinsics
 m3d=importdata('position_vertices_3d.txt');
 fx = 2960.37845;
 fy = 2960.37845;
@@ -70,29 +70,24 @@ IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
 [WO7,WL7] = poseEstimator('init7.txt');
 [WO8,WL8] = poseEstimator('init8.txt');
 
-%% Plot the world points 
-%pcshow(d3,'VerticalAxis','Y','VerticalAxisDir','down',...
-%    'MarkerSize',30);
-%hold on
-%plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
-%hold off
-
-%%
-compute_then_store_sift('../../data/images/init_texture/DSC_9743.jpg',true,'sift/init1');
-
-
-
-
+%% Plot the world points
 pcshow(m3d,'VerticalAxis','Y','VerticalAxisDir','down', 'MarkerSize',30);
 hold on
 plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
 hold off
 
+%% Compute (2D) descriptors for initial images
+path_
+compute_then_store_sift('../../data/images/init_texture/DSC_9743.jpg',...
+    true,'_init1');
+first_idx = 9742
+for i = 1:8
+    compute_then_store_sift(strcat('../../data/images
 
 %save('../init_coord.txt','x1','y1','-ascii');
 [A,B,C]=myransac(d2,5,10,2)
 
-%% Functions
+%% Function
 
 function [WO,WL] = poseEstimator(txtInput)
     m = importdata(txtInput)
@@ -101,25 +96,3 @@ function [WO,WL] = poseEstimator(txtInput)
 end
 
 
-function [] = compute_then_store_sift(path1, vis, path2)
-    %init1=vl_impattern('../../data/images/init_texture/DSC_9743.jpg'); =>
-    %fails because it's not a stock picture ... prefer:
-    init = imread(path1);
-    image(init);
-    gray=single(rgb2gray(init));
-    image(gray);
-    [f,d] = vl_sift(gray);
-    simple_save('sift/f',f);
-    simple_save('sift/f',d);
-    if vis
-        %view(f1,d1);
-        perm = randperm(size(f,2));
-        sel = perm(1:50);
-        h1 = vl_plotframe(f(:,sel));
-        h2 = vl_plotframe(f(:,sel));
-        set(h1,'color','k','linewidth',3);
-        set(h2,'color','k','linewidth',2);
-        h3 = vl_plotsiftdescriptor(d(:,sel),f(:,sel));
-        set(h3,'color','g');
-    end
-end

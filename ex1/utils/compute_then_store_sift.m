@@ -1,6 +1,7 @@
 function [] = compute_then_store_sift(path1, vis, path2)
     %init1=vl_impattern('../../data/images/init_texture/DSC_9743.jpg'); =>
     %fails because it's not a stock picture ... prefer:
+    disp(strcat(path1,'  > ctss >  sift/',path2))
     init = imread(path1);
     image(init);
     gray=single(rgb2gray(init));
@@ -19,4 +20,5 @@ function [] = compute_then_store_sift(path1, vis, path2)
         h3 = vl_plotsiftdescriptor(d(:,sel),f(:,sel));
         set(h3,'color','g');
     end
+    disp('done')
 end
