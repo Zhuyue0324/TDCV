@@ -6,4 +6,5 @@ imshow(init1)
 %teabox3d=pcread('../data/model/teabox.ply')
 %pcshow(teabox3d)
 print("over")
+
     
