@@ -84,8 +84,11 @@ for ii = 1:8
         'images/init_texture/DSC_',int2str(first_idx + ii),...
         '.jpg'), 0, strcat('_init_',int2str(ii)));
 end
+
+
+
 %save('../init_coord.txt','x1','y1','-ascii');
-[A,B,C]=myransac(d2,5,10,2)
+%[A,B,C]=myransac(d2,5,10,2)
 
 %% Function
 
