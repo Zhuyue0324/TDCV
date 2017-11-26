@@ -45,6 +45,13 @@ for ii = 1:8
         '.jpg'), 0, strcat('_init_',int2str(ii)));
 end
 
+%% Compute triangles for each sift feature inside it
+ff=importdata('../ex1/sift/f_init_1');
+%ff=ff(:,1:100);
+dd=importdata('../ex1/sift/d_init_1');
+%dd=dd(:,1:100);
+
+[sf,sd,tri] = findInliersAndTrianglesAssociate(ff,dd,'init1.txt','position_vertices_3d.txt','position_triangles_3d.txt');
 
 
 %save('../init_coord.txt','x1','y1','-ascii');
