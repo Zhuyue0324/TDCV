@@ -64,6 +64,7 @@ function [sf,sd,nc] = find3D(f,d,pathd2,pathd3,pathd3Tri)
   % Convert t3d in triangulation formats
   
   % add lines to m2d so that m2d(i) corresponds to vertex i
+  m2d(8,:) = 0;
   for i = 1:8
      if m2d(i,3) ~= i
          b = [0,0,i]; % only position matters, values could be random
