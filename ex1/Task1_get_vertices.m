@@ -36,14 +36,30 @@ hold on
 plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
 hold off
 
-%% Compute (2D) descriptors for initial images
+%% Set up VLFeat
+matlabpath = '../../../MATLAB/';
+run(matlabpath+'vlfeat-0.9.20/toolbox/vl_setup')
+
+%% Compute descriptors for initial images
 datapath = '../../data/';
 first_idx = 9742;
 for ii = 1:8
-    compute_then_store_sift(strcat(datapath,...
+    disp(strcat('Getting SIFT for image ',int2str(ii)))
+    % Compute 2D descriptors
+    [f,d] = compute_sift(strcat(datapath,...
         'images/init_texture/DSC_',int2str(first_idx + ii),...
-        '.jpg'), 0, strcat('_init_',int2str(ii)));
+        '.jpg'), 0);
+    disp('  Computing its 3D Coordinates')
+    % Keep and convert to 3D those that lay in the teabox
+    [sf,sd,nc] = find3D(f,d,strcat('init',int2str(ii),'.txt'),...
+        'position_vertices_3d.txt','position_triangles_3d.txt');
+    disp('  Saving the result')
+    % Save the result
+    simple_save(strcat('sift/init_f_',int2str(ii))  , sf);
+    simple_save(strcat('sift/init_d_',int2str(ii))  , sd);
+    simple_save(strcat('sift/init_3dc_',int2str(ii)), nc);
 end
+disp('Done.')
 
 %% Compute triangles for each sift feature inside it
 ff=importdata('sift/f_init_1');
