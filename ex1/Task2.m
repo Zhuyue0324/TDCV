@@ -38,6 +38,8 @@ for i = 1:8
     Di = [Di,importdata(strcat(init_sift_prefix,'_d_',int2str(i)))];
     Ci = [Ci,importdata(strcat(init_sift_prefix,'_3dc_',int2str(i)))];
 end
+Di = cast(Di,'like',d); % cast type of Di to that of d
+% not necessary for Fi,Ci as their "floatness" is ok
 
-[matches,scores] = vl_ubcmatch(d,Di); % Error using vl_ubcmatch
-% L1 and L2 must be of the same class
+[matches,scores] = vl_ubcmatch(d,Di);
+% [size(matches),size(scores)]
