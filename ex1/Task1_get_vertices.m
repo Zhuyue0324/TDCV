@@ -1,5 +1,4 @@
 %% Task 1 get vertices
-
 initialAlignment('../data/images/init_texture/DSC_9743.jpg', '../ex1/init1.txt', [1,2,3,4,7,8])
 initialAlignment('../data/images/init_texture/DSC_9744.jpg', '../ex1/init2.txt', [1,2,3,4,6,7,8])
 initialAlignment('../data/images/init_texture/DSC_9745.jpg', '../ex1/init3.txt', [1,2,3,4,6,7])
@@ -38,7 +37,7 @@ hold off
 
 %% Set up VLFeat
 matlabpath = '../../../MATLAB/';
-run(matlabpath+'vlfeat-0.9.20/toolbox/vl_setup')
+run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
 %% Compute descriptors for initial images
 datapath = '../../data/';
