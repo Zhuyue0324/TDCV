@@ -43,3 +43,15 @@ Di = cast(Di,'like',d); % cast type of Di to that of d
 
 [matches,scores] = vl_ubcmatch(d,Di);
 % [size(matches),size(scores)]
+
+%% Create the 5 x N_matched input to RANSAC
+% its rows are of type [x2D,y2D, x3D,y3D,z3D]
+% with 2D and 3D the two paired points
+
+pairs = []
+for i = 1:size(matches,2)
+    C2D = reshape(f(1:2,matches(1,i)),[1,2]);
+    C3D = reshape(Ci(:,matches(2,i)),[1,3]);
+    pairs = [pairs ; C2D,C3D];
+end
+% size(pairs)
