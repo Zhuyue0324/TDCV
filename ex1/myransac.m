@@ -1,52 +1,44 @@
-function [bestA,bestB,bestC] = myransac(data,N,distBoundary,nbInlierNeed)
-  n = size(data,1);
-  bestModelNbInlier = 0;
+function [output, bestR, bestT, bestReprojectionError] = myransac(data,n,N)
+  %data: a 5*l matrix, each colone is a feature point, with coodonate 2d
+  %and 3d
+  %n= n of PnP
+  %N=number of couples of samples tried
+  %output: a 5*n matrix, which is the n points which gives the best model
+  %bestR, bestT: best pose model given by Ransac
+  %bestReprojectionError: the E(p) given by model
+  l = size(data,2);%number of features
+  bestReprojectionError = 10^10;
+  fx = 2960.37845;
+  fy = 2960.37845;
+  cx = 1841.68855;
+  cy = 1235.23369;
+  IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
+  A=[];
+  A(1,1)=fx;
+  A(2,2)=fy;
+  A(3,3)=1;
+  A(3,1)=cx;
+  A(3,2)=cy;%compute A
+  output=[];
+  bestR=[];
+  bestT=[];
   for i=1:N
-    idx = randsample(n,2); 
-    sample = data(idx(1:2),:);   
-    x1=sample(1,1);
-    y1=sample(1,2);
-    x2=sample(2,1);
-    y2=sample(2,2);
-    nbInlier=0;
-    %if (A)line passes (x1,y1), (x2,y2) also passes (0,0) i.e.: Ax+By+C=0 with C=0
-    if x1*y2==x2*y1
-      if x1==x2
-        A=1;
-        B=0;
-        C=-x1;
-      elseif y1==y2
-        A=0;
-        B=1;
-        C=-y1;
-      elseif x1==0 %(case (x1,y1)=(0,0)) 
-        A=y2;
-        B=-x2;
-        C=0;
-      else
-        A=y1;
-        B=-x1;
-        C=0;  
-      end
-    %else if (x1,y1), (x2,y2) pass Ax+By+1=0 then
-    else
-      A=(y1-y2)/(x1*y2-y1*x2);
-      B=(x1-x2)/(y1*x2-y2*x1);
-      C=1;
-    end
-    
-    for j=1:n 
-      %distance of (x0,y0) to Ax+By+C=0 is |Ax0+By0+C|/sqrt(A^2+B^2)
-      distance=abs(A*data(j,1)+B*data(j,2)+C)/sqrt(A^2+B^2);
-      if distance<=distBoundary
-        nbInlier=nbInlier+1;  
-      end
-    end
-    if nbInlier>=nbInlierNeed && nbInlier>bestModelNbInlier
-      bestModelNbInlier = nbInlier;
-      bestA=A;
-      bestB=B;
-      bestC=C;
+    %randomly choose n samples
+    idx = randsample(l,n); 
+    sample = data(:,idx(1:n));
+    %d2=2d coodinates of 2*n, d3=3d coordinates of 3*n
+    d2=sample(1:2,:);
+    d3=sample(3:5,:);
+    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),IntrinsicMat,'MaxReprojectionError',100);
+    %reprojection with A(R|T)M
+    reprojection=A*(R*data(3:5,:)+transpose(T));
+    diff=(reprojection(1:2,:)-data(1:2,:));
+    reprojectionError=sum(diff(1,:).^2)+sum(diff(2,:).^2);
+    if reprojectionError<=bestReprojectionError
+      bestReprojectionError = reprojectionError;
+      output=sample;
+      bestR=R;
+      bestT=T;
     end
   end  
 end
