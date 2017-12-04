@@ -29,7 +29,8 @@ function [output, bestR, bestT, bestReprojectionError] = myransac(data,n,N)
     %d2=2d coodinates of 2*n, d3=3d coordinates of 3*n
     d2=sample(1:2,:);
     d3=sample(3:5,:);
-    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),IntrinsicMat,'MaxReprojectionError',100);
+    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),...
+        IntrinsicMat,'MaxReprojectionError',100);
     %reprojection with A(R|T)M
     reprojection=A*(R*data(3:5,:)+transpose(T));
     diff=(reprojection(1:2,:)-data(1:2,:));

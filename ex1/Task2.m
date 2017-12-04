@@ -15,13 +15,16 @@
 % Currently I write the code for one particular image, it should be easy to
 % change it into a for loop when all is done and good :) -- thomas
 
-%% Set up VLFeat
-matlabpath = '../../../MATLAB/';
+%% Config
+% Set up local paths
+config
+
+% Set up VLFeat
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
 %% Extract and match SIFT features
 
-image_prefix = '../../data/images/detection/DSC_';
+image_prefix = strcat(datapath,'/images/detection/DSC_');
 my_image = 9774;
 image_suffix = '.JPG';
 image_path = strcat(image_prefix,int2str(my_image),image_suffix);
@@ -55,3 +58,8 @@ for i = 1:size(matches,2)
     pairs = [pairs , [C2D;C3D]];
 end
 % size(pairs)
+
+%% Use RANSAC
+
+[output, bestR, bestT, bestReprojectionError] = myransac(pairs,4,20) %
+%TODO increase N
