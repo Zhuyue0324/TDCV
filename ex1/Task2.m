@@ -61,5 +61,5 @@ end
 
 %% Use RANSAC
 
-[output, bestR, bestT, bestReprojectionError] = myransac(pairs,4,20) %
+[output, bestR, bestT, bestReprojectionError] = myransac(pairs,10,10000) %
 %TODO increase N
