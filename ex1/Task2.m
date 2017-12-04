@@ -32,7 +32,7 @@ image_path = strcat(image_prefix,int2str(my_image),image_suffix);
 Fi = [];
 Di = [];
 Ci = []; % coordinates in 3D
-init_sift_prefix = 'sift/init'
+init_sift_prefix = 'sift/init';
 for i = 1:8
     Fi = [Fi,importdata(strcat(init_sift_prefix,'_f_',int2str(i)))];
     Di = [Di,importdata(strcat(init_sift_prefix,'_d_',int2str(i)))];
@@ -48,10 +48,10 @@ Di = cast(Di,'like',d); % cast type of Di to that of d
 % its rows are of type [x2D,y2D, x3D,y3D,z3D]
 % with 2D and 3D the two paired points
 
-pairs = []
+pairs = [];
 for i = 1:size(matches,2)
-    C2D = reshape(f(1:2,matches(1,i)),[1,2]);
-    C3D = reshape(Ci(:,matches(2,i)),[1,3]);
-    pairs = [pairs ; C2D,C3D];
+    C2D = reshape(f(1:2,matches(1,i)),[2,1]);
+    C3D = reshape(Ci(:,matches(2,i)),[3,1]);
+    pairs = [pairs , [C2D;C3D]];
 end
 % size(pairs)
