@@ -1,4 +1,4 @@
-function [output, bestR, bestT, bestReprojectionError] = myransac(data,n,N)
+function [output, bestR, bestT, bestModelNbInlier] = myransac(data,n,N,distBoundary)
   %data: a 5*l matrix, each colone is a feature point, with coodonate 2d
   %and 3d
   %n= n of PnP
@@ -7,7 +7,9 @@ function [output, bestR, bestT, bestReprojectionError] = myransac(data,n,N)
   %bestR, bestT: best pose model given by Ransac
   %bestReprojectionError: the E(p) given by model
   l = size(data,2);%number of features
-  bestReprojectionError = 10^10;
+  bestModelNbInlier = 0;
+  nbInlier = 0;
+  %bestReprojectionError = 10^10;
   fx = 2960.37845;
   fy = 2960.37845;
   cx = 1841.68855;
@@ -29,14 +31,21 @@ function [output, bestR, bestT, bestReprojectionError] = myransac(data,n,N)
     %d2=2d coodinates of 2*n, d3=3d coordinates of 3*n
     d2=sample(1:2,:);
     d3=sample(3:5,:);
-    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),...
-        IntrinsicMat,'MaxReprojectionError',1e6);%100
+    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),IntrinsicMat,'MaxReprojectionError',1000);
     %reprojection with A(R|T)M
     reprojection=A*(R*data(3:5,:)+transpose(T));
     diff=(reprojection(1:2,:)-data(1:2,:));
-    reprojectionError=sum(diff(1,:).^2)+sum(diff(2,:).^2);
-    if reprojectionError<=bestReprojectionError
-      bestReprojectionError = reprojectionError;
+    %reprojectionError=(diff(1,:).^2)+sum(diff(2,:).^2);
+    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
+    nbInlier=sum(reprojectionError<=distBoundary^2);
+    %if reprojectionError<=bestReprojectionError
+    %  bestReprojectionError = reprojectionError;
+    %  output=sample;
+    %  bestR=R;
+    %  bestT=T;
+    %end
+    if nbInlier>bestModelNbInlier
+      bestModelNbInlier=nbInlier;
       output=sample;
       bestR=R;
       bestT=T;
