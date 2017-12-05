@@ -16,7 +16,9 @@ fy = 2960.37845;
 cx = 1841.68855;
 cy = 1235.23369;
 IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
-
+A=[fx,0,0;...
+      0,fy,0;...
+      cx,cy,1];
 % run('../../../MATLAB/vlfeat-0.9.20/toolbox/vl_setup')
 
 %% Estimate all poses
@@ -39,9 +41,12 @@ hold off
 config
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
+
+
+
 %% Compute descriptors for initial images
 first_idx = 9742;
-for ii = 1:8
+for ii = 1:1
     disp(strcat('Getting SIFT for image ',int2str(ii)))
     % Compute 2D descriptors
     [f,d] = compute_sift(strcat(datapath,...
@@ -51,6 +56,23 @@ for ii = 1:8
     % Keep and convert to 3D those that lay in the teabox
     [sf,sd,nc] = find3D(f,d,strcat('init',int2str(ii),'.txt'),...
         'position_vertices_3d.txt','position_triangles_3d.txt');
+    nc(:,1:10)
+    sf(:,1:10)
+    % Check 3D coordinates by attempting to reproject them
+    [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
+        IntrinsicMat);
+    reprojection=A*(R*nc+transpose(T));
+    
+    % [size(reprojection),size(sf)]
+    reprojection(:,1:10)
+    sf(1:2,1:10)
+    
+    diff=(reprojection(1:2,:)./reprojection(3,:) - sf(1:2,:));
+    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
+    nbInlier=sum(reprojectionError<=100);
+    disp('  inliers:')
+    nbInlier
+    
     disp('  Saving the result')
     % Save the result
     simple_save(strcat('sift/init_f_',int2str(ii))  , sf);
@@ -58,18 +80,6 @@ for ii = 1:8
     simple_save(strcat('sift/init_3dc_',int2str(ii)), nc);
 end
 disp('Done.')
-
-%% Compute triangles for each sift feature inside it
-ff=importdata('sift/f_init_1');
-%ff=ff(:,1:100);
-dd=importdata('sift/d_init_1');
-%dd=dd(:,1:100);
-
-[sf,sd,tri] = findInliersAndTrianglesAssociate(ff,dd,'init1.txt','position_vertices_3d.txt','position_triangles_3d.txt');
-
-
-%save('../init_coord.txt','x1','y1','-ascii');
-%[A,B,C]=myransac(d2,5,10,2)
 
 %% Function
 

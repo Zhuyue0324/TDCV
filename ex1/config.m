@@ -1,2 +1,2 @@
 matlabpath = '../../../MATLAB/';
-datapath = '../../data';
+datapath = '../../data/';
