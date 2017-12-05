@@ -35,12 +35,11 @@ hold on
 plotCamera('Size',10,'Orientation',WO1,'Location',WL1);
 hold off
 
-%% Set up VLFeat
-matlabpath = '../../../MATLAB/';
+%% Config
+config
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
 %% Compute descriptors for initial images
-datapath = '../../data/';
 first_idx = 9742;
 for ii = 1:8
     disp(strcat('Getting SIFT for image ',int2str(ii)))
