@@ -65,15 +65,25 @@ for ii = 1:1%8!
     % Try to reproject 3D back to 2D
     [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
         IntrinsicMat);
-    reprojection=A*(R*nc+transpose(T));
     
+    reprojection = A*(R*m3d' +T');
+    %reprojection=A*(R*nc+transpose(T));
+    m2d = importdata('init1.txt');  
+    m2d(8,:) = 0;
+      for i = 1:8
+         if m2d(i,3) ~= i
+             b = [0,0,i]; % only position matters, values could be random
+             m2d = [m2d(1:i-1,:); b; m2d(i:end,:)];
+         end
+      end
+      [m2d(1:8,1:2)';reprojection]
     % [size(reprojection),size(sf)]
-    repro = reprojection(:,1:10)
-    fff = sf(1:2,1:10)
-    RT = [R;T]'
-    diff=(reprojection(1:2,:)./reprojection(3,:) - sf(1:2,:));
-    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    nbInlier=sum(reprojectionError<=100)
+    % repro = reprojection(:,:)%1:10)
+    % fff = sf(1:2,1:10)
+    % RT = [R;T]'
+    % diff=(reprojection(1:2,:)./reprojection(3,:) - sf(1:2,:));
+    % reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
+    % nbInlier=sum(reprojectionError<=100)
     
     disp('  Saving the result')
     % Save the result
