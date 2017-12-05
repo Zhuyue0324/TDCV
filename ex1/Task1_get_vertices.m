@@ -46,7 +46,7 @@ run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
 %% Compute descriptors for initial images
 first_idx = 9742;
-for ii = 1:1
+for ii = 1:1%8!
     disp(strcat('Getting SIFT for image ',int2str(ii)))
     % Compute 2D descriptors
     [f,d] = compute_sift(strcat(datapath,...
@@ -56,9 +56,13 @@ for ii = 1:1
     % Keep and convert to 3D those that lay in the teabox
     [sf,sd,nc] = find3D(f,d,strcat('init',int2str(ii),'.txt'),...
         'position_vertices_3d.txt','position_triangles_3d.txt');
-    nc(:,1:10)
-    sf(:,1:10)
-    % Check 3D coordinates by attempting to reproject them
+    % Check 10 first 3D-2D pairs
+    pair = [nc(:,1:10);0.001*sf(1:2,1:10)]
+    % Plot 3D cloud
+    figure;
+    pcshow(pointCloud(nc'));
+    
+    % Try to reproject 3D back to 2D
     [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
         IntrinsicMat);
     reprojection=A*(R*nc+transpose(T));
