@@ -16,9 +16,9 @@ fy = 2960.37845;
 cx = 1841.68855;
 cy = 1235.23369;
 IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
-A=[fx,0,0;...
-      0,fy,0;...
-      cx,cy,1];
+A=[  fx, 0,cx;...
+      0,fy,cy;...
+      0, 0, 1];
 % run('../../../MATLAB/vlfeat-0.9.20/toolbox/vl_setup')
 
 %% Estimate all poses
@@ -64,14 +64,12 @@ for ii = 1:1
     reprojection=A*(R*nc+transpose(T));
     
     % [size(reprojection),size(sf)]
-    reprojection(:,1:10)
-    sf(1:2,1:10)
-    
+    repro = reprojection(:,1:10)
+    fff = sf(1:2,1:10)
+    RT = [R;T]'
     diff=(reprojection(1:2,:)./reprojection(3,:) - sf(1:2,:));
     reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    nbInlier=sum(reprojectionError<=100);
-    disp('  inliers:')
-    nbInlier
+    nbInlier=sum(reprojectionError<=100)
     
     disp('  Saving the result')
     % Save the result
