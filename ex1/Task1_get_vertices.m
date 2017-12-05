@@ -11,13 +11,14 @@ initialAlignment('../data/images/init_texture/DSC_9750.jpg', '../ex1/init8.txt',
 %% Create 3D model and initialize camera intrinsics
 d3path='position_vertices_3d.txt';
 m3d=importdata(d3path);
-fx = 2960.37845;
-fy = 2960.37845;
+f = 2960.37845;
 cx = 1841.68855;
 cy = 1235.23369;
-IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
-A=[  fx, 0,cx;...
-      0,fy,cy;...
+image_width = 3680;
+image_height = 2456;
+IntrinsicMat=cameraIntrinsics([f,f],[cx,cy],[image_width,image_height]);
+A=[   f, 0,cx;...
+      0, f,cy;...
       0, 0, 1];
 % run('../../../MATLAB/vlfeat-0.9.20/toolbox/vl_setup')
 
@@ -65,8 +66,14 @@ for ii = 1:1%8!
     % Try to reproject 3D back to 2D
     [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
         IntrinsicMat);
+    camMatrix = cameraMatrix(IntrinsicMat,R,T);
+    h = [m3d];
+    h(:,4) = 1;% m3d in homogeneous coordinates
+    test = h * camMatrix;
     
     reprojection = A*(R*m3d' +T');
+    
+    sad = [(test(:,1:2)./test(:,3))';(reprojection(1:2,:)./reprojection(3,:))]
     %reprojection=A*(R*nc+transpose(T));
     m2d = importdata('init1.txt');  
     m2d(8,:) = 0;
