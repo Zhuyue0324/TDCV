@@ -79,7 +79,7 @@ for ii = 1:1%8!
     % [size(reprojection),size(sf)]
     diff=(glad(1:2,:)-glad(3:4,:));
     reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    nbInlier=sum(reprojectionError<=100)
+    fplot(@(x) sum(reprojectionError<=x),[0,1000]);
     
     disp('  Saving the result')
     % Save the result
