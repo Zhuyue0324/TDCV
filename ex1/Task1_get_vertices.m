@@ -47,7 +47,7 @@ run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
 %% Compute descriptors for initial images
 first_idx = 9742;
-for ii = 1:1%8!
+for ii = 1:8
     disp(strcat('Getting SIFT for image ',int2str(ii)))
     % Compute 2D descriptors
     [f,d] = compute_sift(strcat(datapath,...
@@ -65,21 +65,20 @@ for ii = 1:1%8!
     % pcshow(pointCloud(nc'));
     
     % % reproject 3D back to 2D
-    [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
-        IntrinsicMat);
-    [rm,tv] = cameraPoseToExtrinsics(R,T);
-    camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
-    h = [nc]';
-    h(:,4) = 1;% m3d in homogeneous coordinates
-    
-    test = h * camMatrix;
-    glad = [(test(:,1:2)./test(:,3))';sf(1:2,:)]
+    % [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
+    %     IntrinsicMat);
+    % [rm,tv] = cameraPoseToExtrinsics(R,T);
+    % camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
+    % h = [nc]';
+    % h(:,4) = 1;% m3d in homogeneous coordinates
+    % test = h * camMatrix;
+    % glad = [(test(:,1:2)./test(:,3))';sf(1:2,:)]
     % first two lines are reprojected, last two original
     
-    % [size(reprojection),size(sf)]
-    diff=(glad(1:2,:)-glad(3:4,:));
-    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    fplot(@(x) sum(reprojectionError<=x),[0,1000]);
+    % % Plot the number of inliers
+    % diff=(glad(1:2,:)-glad(3:4,:));
+    % reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
+    % fplot(@(x) sum(reprojectionError<=x),[0,1000]);
     
     disp('  Saving the result')
     % Save the result
