@@ -66,15 +66,11 @@ for ii = 1:1%8!
     % Try to reproject 3D back to 2D
     [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
         IntrinsicMat);
-    camMatrix = cameraMatrix(IntrinsicMat,R,T);
+    [rm,tv] = cameraPoseToExtrinsics(R,T)
+    camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
     h = [m3d];
     h(:,4) = 1;% m3d in homogeneous coordinates
     test = h * camMatrix;
-    
-    reprojection = A*(R*m3d' +T');
-    
-    sad = [(test(:,1:2)./test(:,3))';(reprojection(1:2,:)./reprojection(3,:))]
-    %reprojection=A*(R*nc+transpose(T));
     m2d = importdata('init1.txt');  
     m2d(8,:) = 0;
       for i = 1:8
@@ -83,7 +79,9 @@ for ii = 1:1%8!
              m2d = [m2d(1:i-1,:); b; m2d(i:end,:)];
          end
       end
-      [m2d(1:8,1:2)';reprojection]
+      glad = [(test(:,1:2)./test(:,3))';m2d(1:8,1:2)']
+      % first two lines are reprojected, last two original
+    
     % [size(reprojection),size(sf)]
     % repro = reprojection(:,:)%1:10)
     % fff = sf(1:2,1:10)
