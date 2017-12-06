@@ -57,38 +57,29 @@ for ii = 1:1%8!
     % Keep and convert to 3D those that lay in the teabox
     [sf,sd,nc] = find3D(f,d,strcat('init',int2str(ii),'.txt'),...
         'position_vertices_3d.txt','position_triangles_3d.txt');
-    % Check 10 first 3D-2D pairs
-    pair = [nc(:,1:10);0.001*sf(1:2,1:10)]
-    % Plot 3D cloud
-    figure;
-    pcshow(pointCloud(nc'));
     
-    % Try to reproject 3D back to 2D
+    % % Check 10 first 3D-2D pairs
+    % pair = [nc(:,1:10);0.001*sf(1:2,1:10)]
+    % % Plot 3D cloud
+    % figure;
+    % pcshow(pointCloud(nc'));
+    
+    % % reproject 3D back to 2D
     [R,T] = poseEstimator(strcat('init',int2str(ii),'.txt'),d3path,...
         IntrinsicMat);
-    [rm,tv] = cameraPoseToExtrinsics(R,T)
+    [rm,tv] = cameraPoseToExtrinsics(R,T);
     camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
-    h = [m3d];
+    h = [nc]';
     h(:,4) = 1;% m3d in homogeneous coordinates
+    
     test = h * camMatrix;
-    m2d = importdata('init1.txt');  
-    m2d(8,:) = 0;
-      for i = 1:8
-         if m2d(i,3) ~= i
-             b = [0,0,i]; % only position matters, values could be random
-             m2d = [m2d(1:i-1,:); b; m2d(i:end,:)];
-         end
-      end
-      glad = [(test(:,1:2)./test(:,3))';m2d(1:8,1:2)']
-      % first two lines are reprojected, last two original
+    glad = [(test(:,1:2)./test(:,3))';sf(1:2,:)]
+    % first two lines are reprojected, last two original
     
     % [size(reprojection),size(sf)]
-    % repro = reprojection(:,:)%1:10)
-    % fff = sf(1:2,1:10)
-    % RT = [R;T]'
-    % diff=(reprojection(1:2,:)./reprojection(3,:) - sf(1:2,:));
-    % reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    % nbInlier=sum(reprojectionError<=100)
+    diff=(glad(1:2,:)-glad(3:4,:));
+    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
+    nbInlier=sum(reprojectionError<=100)
     
     disp('  Saving the result')
     % Save the result
