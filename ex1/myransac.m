@@ -26,14 +26,19 @@ function [output, bestR, bestT, bestModelNbInlier] = myransac(data,n,N,distBound
     idx = randsample(l,n); 
     sample = data(:,idx(1:n));
     %d2=2d coodinates of 2*n, d3=3d coordinates of 3*n
-    d2=sample(1:2,:);
-    d3=sample(3:5,:);
-    [R,T] = estimateWorldCameraPose(transpose(d2),transpose(d3),...
+    sd2=sample(1:2,:);
+    sd3=sample(3:5,:);
+    [R,T] = estimateWorldCameraPose(transpose(sd2),transpose(sd3),...
         IntrinsicMat,'MaxReprojectionError',1000);
     %reprojection with A(R|T)M
-    reprojection=A*(R*data(3:5,:)+transpose(T));
+    [rm,tv] = cameraPoseToExtrinsics(R,T);
+    camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
+    
+    h = [data(3:5,:)]';
+    h(:,4) = 1;
+    test = h * camMatrix;
+    reprojection=(test(:,1:2)./test(:,3))';
     diff=(reprojection(1:2,:)-data(1:2,:));
-    %reprojectionError=(diff(1,:).^2)+sum(diff(2,:).^2);
     reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
     nbInlier=sum(reprojectionError<=distBoundary^2);
     %if reprojectionError<=bestReprojectionError

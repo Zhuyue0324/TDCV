@@ -73,7 +73,7 @@ for ii = 1:8
     % h(:,4) = 1;% m3d in homogeneous coordinates
     % test = h * camMatrix;
     % glad = [(test(:,1:2)./test(:,3))';sf(1:2,:)]
-    % first two lines are reprojected, last two original
+    % % first two lines are reprojected, last two original
     
     % % Plot the number of inliers
     % diff=(glad(1:2,:)-glad(3:4,:));

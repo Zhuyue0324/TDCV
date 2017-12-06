@@ -58,8 +58,10 @@ for i = 1:size(matches,2)
     pairs = [pairs , [C2D;C3D]];
 end
 % size(pairs)
-
 %% Use RANSAC
 
-[output, bestR, bestT, bestReprojectionError] = myransac(pairs,10,10000) %
+[output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
+% having N=1000 doesn't change much, and we'll do refinement anyway ...
+% [bestR;bestT];
+% bestNbInliers;
 %TODO increase N
