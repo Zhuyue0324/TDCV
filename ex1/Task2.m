@@ -64,4 +64,10 @@ end
 % having N=1000 doesn't change much, and we'll do refinement anyway ...
 % [bestR;bestT];
 % bestNbInliers;
+
+%% Save best model to refine it later
+bestM = [bestR;bestT];
+simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
+disp(strcat('Saved model for image ',int2str(my_image),...
+    ', nbInliers=',int2str(bestNbInliers)))
 %TODO increase N
