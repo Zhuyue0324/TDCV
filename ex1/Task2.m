@@ -22,16 +22,8 @@ config
 % Set up VLFeat
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
-%% Extract and match SIFT features
+%% Retrieve SIFT features from initial images
 
-image_prefix = strcat(datapath,'/images/detection/DSC_');
-my_image = 9774;
-image_suffix = '.JPG';
-image_path = strcat(image_prefix,int2str(my_image),image_suffix);
-
-[f,d] = compute_sift(image_path, 0);
-
-% Concatenate all 8 init_[f,d,3dc]
 Fi = [];
 Di = [];
 Ci = []; % coordinates in 3D
@@ -44,30 +36,34 @@ end
 Di = cast(Di,'like',d); % cast type of Di to that of d
 % not necessary for Fi,Ci as their "floatness" is ok
 
-[matches,scores] = vl_ubcmatch(d,Di);
-% [size(matches),size(scores)]
+%% Loop over all images
+for my_image = 9751:9774
+    %% Extract and match SIFT features
+    image_prefix = strcat(datapath,'images/detection/DSC_');
+    image_suffix = '.JPG';
+    image_path = strcat(image_prefix,int2str(my_image),image_suffix);
 
-%% Create the 5 x N_matched input to RANSAC
-% its rows are of type [x2D,y2D, x3D,y3D,z3D]
-% with 2D and 3D the two paired points
+    [f,d] = compute_sift(image_path, 0);
+    [matches,scores] = vl_ubcmatch(d,Di);
+    % [size(matches),size(scores)]
 
-pairs = [];
-for i = 1:size(matches,2)
-    C2D = reshape(f(1:2,matches(1,i)),[2,1]);
-    C3D = reshape(Ci(:,matches(2,i)),[3,1]);
-    pairs = [pairs , [C2D;C3D]];
+    %% Create the 5 x N_matched input to RANSAC
+    % its rows are of type [x2D,y2D, x3D,y3D,z3D]
+    % with 2D and 3D the two paired points
+
+    pairs = [];
+    for i = 1:size(matches,2)
+        C2D = reshape(f(1:2,matches(1,i)),[2,1]);
+        C3D = reshape(Ci(:,matches(2,i)),[3,1]);
+        pairs = [pairs , [C2D;C3D]];
+    end
+    % size(pairs)
+    %% Use RANSAC and save best model
+
+    [output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
+    % having N=1000 doesn't change much, and we'll do refinement anyway ...
+    bestM = [bestR;bestT];
+    simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
+    disp(strcat('Saved model for image ',int2str(my_image),...
+        ', nbInliers=',int2str(bestNbInliers)))
 end
-% size(pairs)
-%% Use RANSAC
-
-[output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
-% having N=1000 doesn't change much, and we'll do refinement anyway ...
-% [bestR;bestT];
-% bestNbInliers;
-
-%% Save best model to refine it later
-bestM = [bestR;bestT];
-simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
-disp(strcat('Saved model for image ',int2str(my_image),...
-    ', nbInliers=',int2str(bestNbInliers)))
-%TODO increase N
