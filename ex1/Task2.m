@@ -33,7 +33,7 @@ for i = 1:8
     Di = [Di,importdata(strcat(init_sift_prefix,'_d_',int2str(i)))];
     Ci = [Ci,importdata(strcat(init_sift_prefix,'_3dc_',int2str(i)))];
 end
-Di = cast(Di,'like',d); % cast type of Di to that of d
+Di = cast(Di,'like',[0]); % cast type of Di to that of d
 % not necessary for Fi,Ci as their "floatness" is ok
 
 %% Loop over all images
