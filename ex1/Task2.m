@@ -33,7 +33,6 @@ for i = 1:8
     Di = [Di,importdata(strcat(init_sift_prefix,'_d_',int2str(i)))];
     Ci = [Ci,importdata(strcat(init_sift_prefix,'_3dc_',int2str(i)))];
 end
-Di = cast(Di,'like',[0]); % cast type of Di to that of d
 % not necessary for Fi,Ci as their "floatness" is ok
 
 %% Loop over all images
@@ -44,6 +43,7 @@ for my_image = 9751:9774
     image_path = strcat(image_prefix,int2str(my_image),image_suffix);
 
     [f,d] = compute_sift(image_path, 0);
+    Di = cast(Di,'like',d); % cast type of Di to that of d
     [matches,scores] = vl_ubcmatch(d,Di);
     % [size(matches),size(scores)]
 
@@ -59,10 +59,11 @@ for my_image = 9751:9774
     end
     % size(pairs)
     %% Use RANSAC and save best model
-
+    
     [output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
     % having N=1000 doesn't change much, and we'll do refinement anyway ...
     bestM = [bestR;bestT];
+    simple_save(strcat('poses/2D3D_',int2str(my_image),'.csv'), pairs);
     simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
     disp(strcat('Saved model for image ',int2str(my_image),...
         ', nbInliers=',int2str(bestNbInliers)))
