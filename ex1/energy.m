@@ -1,9 +1,10 @@
 function [E] = energy(cameraMatrix,correspondences,tTukey) %TODO untested!
     %% Computes the energy to be minimized in pose refinement
-    % Based on reprojection error, weighted by a M function (cf II 39-45)
+    % Based on reprojection error, weighted by a M function (cf II.39-45)
+    
     % Inputs:
     %  cameraMatrix   the camera matrix taking R,T and A into account (cf
-    %   myransac.m)
+    %   myransac.m to see how to form it)
     %  correspondences   is a (2+3)*N vector whose columns represent a
     %   point, ie. its 2D coordinates and the 3D given by SIFT-matching
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
