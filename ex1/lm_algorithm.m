@@ -6,7 +6,7 @@
 %%Use Levenberg-Marquart algorithm to refine the pose(R,T), now the
 %%following code is just about a single pose.
 %this is the main function we want to use`
-function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, tau)
+function[refinedR, refinedT] = lm_algorithm(data, RT, n_iters, tau)
 
     h2d = data(1:2,:);
     h3d = data(3:5,:);
@@ -20,14 +20,15 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, tau)
     % t is a threshold with respect to delta
     u = tau + 1;
     lambda = 0.001;
-    RT = [bestR, bestT];
     for t=1:n_iters 
         if u > tau
             
             %% compute J
             
             % derivative of R
-            dRr = mydRr(bestR);
+            R = RT(:,1:3);
+            T = RT(:,4);
+            dRr = mydRr(R);
             for i = 1:3
                 %dRrM is the derivative of R multiply h3d
                 dRrM(i) = dRr(i) * h3d;
@@ -38,8 +39,6 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, tau)
             dMp = [dRrM(1), dRrM(2), dRrM(3), E];
             %  compute dm and then J=dm*A*dMp
 
-            R = RT(:,1:3);
-            T = RT(:,4);
             [rm,tv] = cameraPoseToExtrinsics(R,T);
             camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
             m_homo = h3d * camMatrix;
