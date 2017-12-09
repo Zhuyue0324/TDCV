@@ -59,15 +59,19 @@ for my_image = 9751:9774
     end
     % size(pairs)
     %% Use RANSAC and save best model
+<<<<<<< HEAD
 
     
     
     
+=======
+>>>>>>> 3bf325c9c761e955683940386478aa66235a6676
     
     [output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
     % having N=1000 doesn't change much, and we'll do refinement anyway
     % ...N means the distance, threshold
     bestM = [bestR;bestT];
+    simple_save(strcat('poses/2D3D_',int2str(my_image),'.csv'), pairs);
     simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
     disp(strcat('Saved model for image ',int2str(my_image),...
         ', nbInliers=',int2str(bestNbInliers)))

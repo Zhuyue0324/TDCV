@@ -8,16 +8,11 @@ function [output, bestR, bestT, bestModelNbInlier] = myransac(data,n,N,distBound
   %bestReprojectionError: the E(p) given by model
   l = size(data,2);%number of features
   bestModelNbInlier = 0;
-  nbInlier = 0;
   %bestReprojectionError = 10^10;
-  fx = 2960.37845;
-  fy = 2960.37845;
+  f = 2960.37845;
   cx = 1841.68855;
   cy = 1235.23369;
-  IntrinsicMat=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
-  A=[fx,0,cx;...
-      0,fy,cy;...
-      0,0,1];
+  IntrinsicMat=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
   output=[];
   bestR=[];
   bestT=[];

@@ -1,3 +1,4 @@
+Detection:
 Saved model for image9751, nbInliers=414
 Saved model for image9752, nbInliers=754
 Saved model for image9753, nbInliers=437
@@ -22,3 +23,12 @@ Saved model for image9771, nbInliers=87
 Saved model for image9772, nbInliers=95
 Saved model for image9773, nbInliers=715
 Saved model for image9774, nbInliers=445
+Init:
+Saved model for image9743, nbInliers=1420
+Saved model for image9744, nbInliers=851
+Saved model for image9745, nbInliers=693
+Saved model for image9746, nbInliers=1384
+Saved model for image9747, nbInliers=1899
+Saved model for image9748, nbInliers=1248
+Saved model for image9749, nbInliers=712
+Saved model for image9750, nbInliers=1010
