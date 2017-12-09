@@ -6,26 +6,27 @@
 %%Use Levenberg-Marquart algorithm to refine the pose(R,T), now the
 %%following code is just about a single pose.
 %this is the main function we want to use`
-function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, t)
+function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, tau)
 
     h2d = data(1:2,:);
-    h3d = data(3:4,:);
+    h3d = data(3:5,:);
     h3d(:,4) = 1;
     h2d(:,3) = 1;
     
-    fx = 2960.37845;
-    fy = 2960.37845;
+    f = 2960.37845;
     cx = 1841.68855;
     cy = 1235.23369;
-    A=cameraIntrinsics([fx,fy],[cx,cy],[3680,2456]);
+    A=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
     % t is a threshold with respect to delta
-    u = t + 1;
+    u = tau + 1;
     lambda = 0.001;
     RT = [bestR, bestT];
-    for it=1:n_iters 
-        if u > t       
-            m = A * RT * h3d; 
-          % compute J
+    for t=1:n_iters 
+        if u > tau
+            
+            %% compute J
+            
+            % derivative of R
             dRr = mydRr(bestR);
             for i = 1:3
                 %dRrM is the derivative of R multiply h3d
@@ -36,15 +37,24 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, t)
             E = eye(3,3);
             dMp = [dRrM(1), dRrM(2), dRrM(3), E];
             %  compute dm and then J=dm*A*dMp
-            dm = [1/m(3), 0, -m(1)/m(3)^2;...
-                0, 1/m(3), -m(2)/m(3)^2];
-            J = dm * A * dMp;
-            
+
+            R = RT(:,1:3);
+            T = RT(:,4);
+            [rm,tv] = cameraPoseToExtrinsics(R,T);
+            camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
+            m_homo = h3d * camMatrix;
+            m = (m_homo(:,1:2)./m_homo(:,3))';
+
+            e = energy(m,data(1:2,:),300);
+            dm = [1/m_homo(3), 0, -m_homo(1)/m_homo(3)^2;...
+                0, 1/m_homo(3), -m_homo(2)/m_homo(3)^2];
+            J = dm * A.IntrinsicMatrix * dMp;
+
             %the size of J and I is 2 by 6
             I = eye(size(J'*J));
             % e before updating M; 
        %%%%%question: the dimension of e is 3*1 or should be 2*1 
-            e = m - h2d;
+
             % update M
             % but the dimension of delta is [6*2]/[2*2] not consistent with
             % RT(3,4)?? delta() ??wierd
@@ -58,6 +68,8 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, t)
                 lambda = 0.1 * lambda;
             end
             u = delta;
+        else
+            break
         end
     end
     refinedR = RT(:,1:3);
@@ -65,7 +77,7 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, t)
 
     %%Compute derivative of 3D rotation in exponential coordinates    
 function [dRr] = mydRr(R)
-    w = exponential(R);
+    w = exponentialMap(R);
     I = eye(3,3);
     for i=1:3
         e = zeros(3,1);
@@ -77,9 +89,9 @@ function [dRr] = mydRr(R)
 % Compute the skew symmetric matrix of a,
 % a should be imputed as a 3 by 1 vector
 function [skew] = myskew(a)
-    skew = [0 -a(3) a(2);...
-        a(3) 0 -a(1);...
-        -a(2) a(1) 0];
+    skew = [0    -a(3) a(2);...
+            a(3)  0   -a(1);...
+           -a(2)  a(1) 0];
 
    
 
