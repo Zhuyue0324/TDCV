@@ -1,5 +1,7 @@
 % initialize lambda with a small value: lambda = 0.001
-% Compute delta_i and E(p_i+delta_i)
+% Compute delta_i and E(p_i+delta_i)¡¢
+
+
 %If E(p_i+delta_i)>E(p_i), lambda = 10lambda
 %If E(p_i+delta_i)<E(p_i), lambda = 0.1lambda
 
@@ -42,15 +44,15 @@ function[refinedR, refinedT] = lm_algorithm(data, bestR, bestT, n_iters, t)
             
             %the size of J and I is 2 by 6
             I = eye(size(J'*J));
-            % e before updating M; 
+            % e before updating RT; 
        %%%%%question: the dimension of e is 3*1 or should be 2*1 
             e = m - h2d;
-            % update M
+            % update RT
             % but the dimension of delta is [6*2]/[2*2] not consistent with
             % RT(3,4)?? delta() ??wierd
             delta = -(J' * e) / (J' * J + lambda * I);
             RT = RT + delta;
-            % the new e after updating M
+            % the new e after updating RT
             enew = m - h2d;
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
