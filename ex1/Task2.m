@@ -59,13 +59,7 @@ for my_image = 9751:9774
     end
     % size(pairs)
     %% Use RANSAC and save best model
-<<<<<<< HEAD
 
-    
-    
-    
-=======
->>>>>>> 3bf325c9c761e955683940386478aa66235a6676
     
     [output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
     % having N=1000 doesn't change much, and we'll do refinement anyway
