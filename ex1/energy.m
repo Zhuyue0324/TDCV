@@ -19,14 +19,18 @@ function [E] = energy(h1,h2,tTukey, show) %
     sizen=size(diff);
     n=sizen(2);
     E=[];
+    nbInliers = 0;
     for i=1:n
-        E(2*i-1) = min(diff(1,i),tTukey^2);
-        E(2*i) = min(diff(2,i),tTukey^2);
-        %E(i) =(maxxed)/2; % unnecessary constant comes from the lecture
+        E(2*i-1) = min(diff(1,i),.5*tTukey^2);
+        E(2*i) = min(diff(2,i),.5*tTukey^2); % not quite sure separating both dimensions is legit ...
+        if(diff(1,i)+diff(2,i) < tTukey^2)
+            nbInliers = nbInliers + 1;
+        end
     end
     if show>0
-        disp(((diff(:,1:10))))
-        disp(E(:,1:10))
+        % disp(((diff(:,1:10))))
+        % disp(E(:,1:10))
+        inliers = nbInliers
     end
 end
 
