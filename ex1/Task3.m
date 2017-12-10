@@ -24,5 +24,6 @@ data = (importdata(strcat(coor_prefix,int2str(my_image),'.csv')));
   %  = pairs, dim = 2+3 * N
 n_iters = 100;
 tau = 0.1;
+
 RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)]
-lm_algorithm(data, RTinput, n_iters, tau)
+refined = lm_algorithm(data, RTinput, n_iters, tau);

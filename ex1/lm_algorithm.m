@@ -35,7 +35,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
     camMatrix = cameraMatrix(A,rm,tv);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
-    e = energy(m,data(1:2,:),300);
+    e = energy(m,data(1:2,:),300,1);
     for t=1:n_iters 
         if u > tau
             
@@ -74,7 +74,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
             m = (m_homo(1:2,:)./m_homo(3,:));
             
             % the new e after updating M
-            enew = energy(m,data(1:2,:),300);
+            enew = energy(m,data(1:2,:),300,0);
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
             else
