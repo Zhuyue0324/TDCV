@@ -8,7 +8,7 @@ function [E] = energy(h1,h2,tTukey) %TODO untested!
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
     %   c from slide II.41
     % Output:
-    %  E = sum(M(d(2D,reproj(3D))²))
+    %  E = sum(M(d(2D,reproj(3D))Â²))
     
     %% compute energy
     diff=(h1(1:2,:)-h2(1:2,:));
@@ -19,8 +19,8 @@ function [E] = energy(h1,h2,tTukey) %TODO untested!
     n=sizen(2);
     E=[];
     for i=1:n
-        E(2*i-1) = max(diff(1,i),tTukey^2);
-        E(2*i) = max(diff(2,i),tTukey^2);
+        E(2*i-1) = min(diff(1,i),tTukey^2);
+        E(2*i) = min(diff(2,i),tTukey^2);
         %E(i) =(maxxed)/2; % unnecessary constant comes from the lecture
     end
 end
