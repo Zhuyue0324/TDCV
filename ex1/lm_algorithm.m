@@ -11,15 +11,14 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
     h2d = data(1:2,:);
     h3d = data(3:5,:);
     h3d(4,:) = 1;
-    h2d(3,:) = 1;
+    %h2d(3,:) = 1;
     disp(size(data))
     sizen=size(data);
     n=sizen(2);
     f = 2960.37845;
     cx = 1841.68855;
     cy = 1235.23369;
-    A=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
-    %IntrinsicMat = [f,0,cx;0,f,cy;0,0,1];
+    IntrinsicMat=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
     % t is a threshold with respect to delta
     u = tau + 1;
     lambda = 0.001;
@@ -32,7 +31,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
     I = eye(6,6);
             
     [rm,tv] = cameraPoseToExtrinsics(R,T);
-    camMatrix = cameraMatrix(A,rm,tv);
+    camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
     e = energy(m,data(1:2,:),300,1);
@@ -56,7 +55,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
             
                 dm = [1/m_homo(3,i), 0, -m_homo(1,i)/m_homo(3,i)^2; ...
                       0, 1/m_homo(3,i), -m_homo(2,i)/m_homo(3,i)^2];
-                J((2*i-1):(2*i),:) = dm * A.IntrinsicMatrix * dMp;
+                J((2*i-1):(2*i),:) = dm * IntrinsicMat.IntrinsicMatrix * dMp;
             end
             %the size of J and I is 2 by 6
             
@@ -69,7 +68,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
             
             [dRr1,dRr2,dRr3] = mydRr(R);
             [rm,tv] = cameraPoseToExtrinsics(R,T);
-            camMatrix = cameraMatrix(A,rm,tv);
+            camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
             m_homo =  camMatrix' * h3d;
             m = (m_homo(1:2,:)./m_homo(3,:));
             

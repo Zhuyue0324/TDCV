@@ -14,17 +14,19 @@ function [E] = energy(h1,h2,tTukey, show) %
     diff=(h1(1:2,:)-h2(1:2,:));
     %reprojectionError=[(diff(1,:).^2),(diff(2,:).^2)];
     %maxxed = max(reprojectionError,tTukey^2);
-    if show>0
-        disp(((diff(:,1:10))))
-    end
+    
     diff=diff.^2;
     sizen=size(diff);
     n=sizen(2);
     E=[];
     for i=1:n
-        E(2*i-1) = max(diff(1,i),tTukey^2);
-        E(2*i) = max(diff(2,i),tTukey^2);
+        E(2*i-1) = min(diff(1,i),tTukey^2);
+        E(2*i) = min(diff(2,i),tTukey^2);
         %E(i) =(maxxed)/2; % unnecessary constant comes from the lecture
+    end
+    if show>0
+        disp(((diff(:,1:10))))
+        disp(E(:,1:10))
     end
 end
 
