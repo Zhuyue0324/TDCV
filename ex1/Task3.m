@@ -4,6 +4,16 @@
 config
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
+%% testing w<->R => ok :D
+R1 = [1.,0.,0.;...
+     0.,0.,-1.;...
+     0.,1.,0.];
+R2 = [-0.216271,	-0.896039,	-0.387739;...
+       0.223404,	 0.341184,	-0.913063;...
+       0.95043 ,	-0.284091,	 0.12639]; % taken from poses
+ 
+r = rotationMatrix(exponentialMap(R2))
+
 %% Load the data
 my_image = 9751;
 poses_prefix = 'poses/DSC_';

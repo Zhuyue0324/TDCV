@@ -44,11 +44,11 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
             % derivative of R
             
             %disp(RT)
-            disp(t)
-            disp(u-tau)
-            disp(sum(e))
+            %disp(t)
+            %disp(u-tau)
+            %disp((e))
             for i = 1:n
-                %dRrM is the derivative of R multiply h3d
+                %dRrM is (the derivative of R) * h3d
                 dRrM1 = dRr1 * h3d(1:3,i);
                 dRrM2 = dRr2 * h3d(1:3,i);
                 dRrM3 = dRr3 * h3d(1:3,i);

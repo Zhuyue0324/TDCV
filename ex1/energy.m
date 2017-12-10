@@ -1,4 +1,4 @@
-function [E] = energy(h1,h2,tTukey) %TODO untested!
+function [E] = energy(h1,h2,tTukey) % 
     %% Computes the energy to be minimized in pose refinement
     % Based on reprojection error, weighted by a M function (cf II.39-45)
     
@@ -14,6 +14,7 @@ function [E] = energy(h1,h2,tTukey) %TODO untested!
     diff=(h1(1:2,:)-h2(1:2,:));
     %reprojectionError=[(diff(1,:).^2),(diff(2,:).^2)];
     %maxxed = max(reprojectionError,tTukey^2);
+    disp(diff)
     diff=diff.^2;
     sizen=size(diff);
     n=sizen(2);
