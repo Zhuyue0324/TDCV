@@ -14,7 +14,7 @@ function [E] = energy(h1,h2,tTukey) %
     diff=(h1(1:2,:)-h2(1:2,:));
     %reprojectionError=[(diff(1,:).^2),(diff(2,:).^2)];
     %maxxed = max(reprojectionError,tTukey^2);
-    disp(diff)
+    disp(((diff(:,1:10))))
     diff=diff.^2;
     sizen=size(diff);
     n=sizen(2);

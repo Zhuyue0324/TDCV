@@ -23,7 +23,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
     % t is a threshold with respect to delta
     u = tau + 1;
     lambda = 0.001;
-    RT=RTinput;
+    RT= RTinput;
     R = rotationMatrix(RT(1:3));
     T = RT(4:6)';
             
