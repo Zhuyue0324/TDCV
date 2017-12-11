@@ -18,7 +18,8 @@ IntrinsicMat=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
 RTinput;
 
 fun = @(RT)eFromRT(RT, IntrinsicMat, h2d, h3d);
+fun(RTinput);
 
-[refined, emin] = fminsearch(fun, RTinput)
+[refined, emin] = fminsearch(fun, RTinput);
 
     
