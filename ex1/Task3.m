@@ -27,3 +27,4 @@ tau = 0.1;
 
 RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)];
 [refined, inliers] = lm_algorithm(data, RTinput, n_iters, tau);
+

@@ -21,9 +21,10 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     E=[];
     nbInliers = 0;
     for i=1:n
-        E(2*i-1) = min(diff(1,i),.5*tTukey^2);
-        E(2*i) = min(diff(2,i),.5*tTukey^2); % not quite sure separating both dimensions is legit ...
-        if(diff(1,i)+diff(2,i) < tTukey^2)
+        e = rho(diff(:,i),tTukey);
+        E(2*i-1) = e;
+        E(2*i) = e; % not quite sure separating both dimensions is legit ...
+        if(e < tTukey^2 / 6.)
             nbInliers = nbInliers + 1;
         end
     end
@@ -32,5 +33,14 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
         % disp(E(:,1:10))
         inliers = nbInliers
     end
-end
+
+function [e] = rho(x, c)
+    sc = c^2;
+    sx = x(1)^2 + x(2)^2;
+    r = 1;
+    if sx <= sc
+        r = 1. - (1. - (sx/sc))^3;
+    end
+    e = r * sc / 6.;
+        
 
