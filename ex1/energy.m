@@ -1,4 +1,4 @@
-function [E] = energy(h1,h2,tTukey, show) % 
+function [E, nbInliers] = energy(h1,h2,tTukey, show) % 
     %% Computes the energy to be minimized in pose refinement
     % Based on reprojection error, weighted by a M function (cf II.39-45)
     

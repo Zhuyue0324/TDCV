@@ -6,7 +6,7 @@
 %%Use Levenberg-Marquart algorithm to refine the pose(R,T), now the
 %%following code is just about a single pose.
 %this is the main function we want to use`
-function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
+function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
 
     h2d = data(1:2,:);
     h3d = data(3:5,:);
@@ -35,7 +35,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
     camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
-    e = energy(m,data(1:2,:),tukey,1);
+    [e,inliers] = energy(m,data(1:2,:),tukey,1);
     for t=1:n_iters 
         if u > tau
             
@@ -74,7 +74,7 @@ function[refinedRT] = lm_algorithm(data, RTinput, n_iters, tau)
             m = (m_homo(1:2,:)./m_homo(3,:));
             
             % the new e after updating M
-            enew = energy(m,data(1:2,:),tukey,1);
+            [enew,inliers] = energy(m,data(1:2,:),tukey,1);
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
             else
