@@ -60,8 +60,9 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
             end
             %the size of J and I is 2 by 6
             
-            
-            delta = -inv(J' * J + lambda * I)*(J' * sqrtenergy(m,data(1:2,:),tukey)');
+            [EforJ,~] = energy(m,data(1:2,:),tukey,0);
+            sqrtE = sqrt(EforJ');
+            delta = -inv(J' * J + lambda * I)*(J' * sqrtE);
             RT = RT + delta';
             
             R = rotationMatrix(RT(1:3));
