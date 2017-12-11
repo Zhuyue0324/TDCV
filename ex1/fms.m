@@ -44,7 +44,6 @@ A = IM.IntrinsicMatrix;
 C2 = h2d;
 C3 = h3d(1:3,:);
 
-ft(RTinput, A, C3, C2);
-[refined, emin] = fminsearch(@(RT) ft(RT, A, C3, C2), RTinput);
-
+RTinput, ft(RTinput, A, C3, C2)
+[refined, emin] = fminsearch(@(RT) ft(RT, A, C3, C2), RTinput)
     
