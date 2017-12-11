@@ -42,11 +42,8 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
             %% compute J
             J =[];
             % derivative of R
+            [dRr1,dRr2,dRr3] = mydRr(R);
             
-            %disp(RT)
-            %disp(t)
-            %disp(u-tau)
-            %disp((e))
             for i = 1:n
                 %dRrM is (the derivative of R) * h3d
                 dRrM1 = dRr1 * h3d(1:3,i);
@@ -58,31 +55,32 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
                       0, 1/m_homo(3,i), -m_homo(2,i)/m_homo(3,i)^2];
                 J((2*i-1):(2*i),:) = dm * IntrinsicMat.IntrinsicMatrix * dMp;
             end
-            %the size of J and I is 2 by 6
             
+            %% compute enregy
             [EforJ,~] = energy(m,data(1:2,:),tukey,0);
             sqrtE = sqrt(EforJ');
-            delta = -inv(J' * J + lambda * I)*(J' * sqrtE);
-            RT = RT + delta';
             
+            %% compute and apply change to the solution
+            Delta = -inv(J' * J + lambda * I)*(J' * sqrtE);
+            RT = RT + Delta';
             R = rotationMatrix(RT(1:3));
             T = RT(4:6)';
             
-            [dRr1,dRr2,dRr3] = mydRr(R);
+            % compute new energy
             [rm,tv] = cameraPoseToExtrinsics(R,T);
             camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
             m_homo =  camMatrix' * h3d;
             m = (m_homo(1:2,:)./m_homo(3,:));
-            
-            % the new e after updating M
             [enew,inliers] = energy(m,data(1:2,:),tukey,1);
+            e=enew; %since we don't reverse the change, e should be updated anyway!
+            
+            %% update lambda (toggle between SGD and GN)
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
             else
                 lambda = 0.1 * lambda;
-                e=enew;
             end
-            u = norm(delta);
+            u = norm(Delta);
             
         else
             break

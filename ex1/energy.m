@@ -8,7 +8,10 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
     %   c from slide II.41
     % Output:
-    %  E = sum(M(d(2D,reproj(3D))Â²))
+    %  E. the lecture says we could use min(1,x²) too but this is the
+    %   proper Tukey estimator, 1|1-(1-x²)^3|1.
+    %  nbInliers is the number of points for which we took the non-flat
+    %   value
     
     %% compute energy
     diff=(h1(1:2,:)-h2(1:2,:));
