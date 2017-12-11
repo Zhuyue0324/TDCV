@@ -1,5 +1,5 @@
 function [output, bestR, bestT, bestModelNbInlier] = myransac(data,n,N,distBoundary)
-  %data: a 5*l matrix, each colone is a feature point, with coodonate 2d
+  %data: a 5*l matrix, each column is a feature point, with coodonate 2d
   %and 3d
   %n= n of PnP
   %N=number of couples of samples tried

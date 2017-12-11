@@ -27,18 +27,20 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
     
     %% Compute initial energy
     RT= RTinput;
+    
+    disp(RT)
     R = rotationMatrix(RT(1:3));
     T = RT(4:6)';
             
     E = eye(3,3);
     I = eye(6,6);
     
-    [rm,tv] = cameraPoseToExtrinsics(R,T);
-    camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
+    %[rm,tv] = cameraPoseToExtrinsics(R,T);
+    camMatrix = cameraMatrix(IntrinsicMat,R,T);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
-    [e,~] = energy(m,data(1:2,:),tukey,1);
-            
+    [e,~] = energy(m,h2d,tukey,1);
+    disp(sum(e))
     for t=1:n_iters 
         if u > tau
             %% compute J
@@ -53,34 +55,45 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
                 dRrM3 = dRr3 * h3d(1:3,i);
                 dMp=[dRrM1,dRrM2,dRrM3,E];
             
-                dm = [1/m_homo(3,i), 0, -m_homo(1,i)/m_homo(3,i)^2; ...
-                      0, 1/m_homo(3,i), -m_homo(2,i)/m_homo(3,i)^2];
-                J((2*i-1):(2*i),:) = dm * (IntrinsicMat.IntrinsicMatrix) * dMp;
+                dm = [1/m_homo(3,i), 0, -m_homo(1,i)/(m_homo(3,i)^2); ...
+                      0, 1/m_homo(3,i), -m_homo(2,i)/(m_homo(3,i)^2)];
+                J((2*i-1):(2*i),:) = dm * (IntrinsicMat.IntrinsicMatrix)' * dMp;
             end
             
             %% compute and apply change to the solution
-            sqrtE = sqrt(e');
-            Delta = -inv(J' * J + lambda * I)*(J' * sqrtE);
-            RT = RT + Delta';
-            R = rotationMatrix(RT(1:3));
-            T = RT(4:6)';
+            %sqrtE = sqrt(e');
+            Delta = -inv(J' * J + lambda * I)*(J' * sqrtenergy(m,h2d,tukey)');
+            RTnew = RT + Delta';
+            Rnew = rotationMatrix(RTnew(1:3));
+            Tnew = RTnew(4:6)';
             %J
             %JJ = J' * J
             % compute new energy
-            [rm,tv] = cameraPoseToExtrinsics(R,T);
-            camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
+            %[rm,tv] = cameraPoseToExtrinsics(R,T);
+            camMatrix = cameraMatrix(IntrinsicMat,Rnew,Tnew);
             m_homo =  camMatrix' * h3d;
             m = (m_homo(1:2,:)./m_homo(3,:));
-            [enew,inliers] = energy(m,data(1:2,:),tukey,1);
-            e=enew; %since we don't reverse the change, e should be updated anyway!
+            [enew,inliers] = energy(m,h2d,tukey,1);
+             %since we don't reverse the change, e should be updated anyway!
             
             %% update lambda (toggle between SGD and GN)
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
+                
+                disp(RTnew)
+                disp(sum(enew))
             else
                 lambda = 0.1 * lambda;
+                RT=RTnew;
+                R=Rnew;
+                T=Tnew;
+                e=enew;
             end
+            
             u = norm(Delta);
+            disp(u-tau)
+            disp(RT)
+            disp(sum(e))
             
         else
             break
