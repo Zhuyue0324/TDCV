@@ -22,7 +22,7 @@ bestM = (importdata(strcat(poses_prefix,int2str(my_image),'.csv')));
   %   = [bestR ; bestT]
 data = (importdata(strcat(coor_prefix,int2str(my_image),'.csv')));
   %  = pairs, dim = 2+3 * N
-n_iters = 4;
+n_iters = 100;
 tau = 0.001;
 %%%%%%%%%%%%%%%%%%%%%
 [RR,TT]= cameraPoseToExtrinsics(bestM(1:3,:),bestM(4,:)');
@@ -31,4 +31,7 @@ RTinput=[exponentialMap(RR),TT];
 
 %RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)];
 [refined, inliers] = lm_algorithm(data, RTinput, n_iters, tau);
+ % the first pose remains the best :(((
+ 
+%% Using MATLAB's fminsearch
 
