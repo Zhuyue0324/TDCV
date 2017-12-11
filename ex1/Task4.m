@@ -47,10 +47,23 @@ lambda = 1e-3;
 tau = 1 % ???
 u = tau + 1
 for image=9776:9821
-    % find 2D-3D ...
     if u <= tau
+        % already diverged too much ?
         break;
     end
+    % find 2D-3D ... I match it with init, might be worth to match with
+    % image_(n-1) instead >>>???????????<<<
+    image_path = strcat(image_prefix,int2str(image),image_suffix);
+    [f,d] = compute_sift(image_path, 0);
+    [matches,scores] = vl_ubcmatch(d,Di);
+    pairs = [];
+    for i = 1:size(matches,2)
+        C2D = reshape(f(1:2,matches(1,i)),[2,1]);
+        C3D = reshape(Ci(:,matches(2,i)),[3,1]);
+        pairs = [pairs , [C2D;C3D]];
+    end
+
+    
     %TODO compute e, sigma, w to input to WLM
     [nextSolution, inliers] = lm_algorithm(pairs, previousSolution, n_iters, tau);
     %TODO update u with |Delta|
