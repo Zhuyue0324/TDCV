@@ -28,15 +28,23 @@ RTinput;
 % cc = 1.5;
 % X = fminsearch(@(x) ff(x,cc),[0.3;1]) % Their example works ...
 
-fun = @(RT, IM, C2, C3) eFromRT(RT, IM, C2, C3);
+% fun = @(RT, IM, C2, C3) eFromRT(RT, IM, C2, C3);
+
 % boloss = @(RT, IM, C2, C3) ... % Doomed
 %    sum(min(( (((cameraMatrix(IntrinsicMat,rotationMatrix(RT(1:3)),RT(4:6)'))' * C3)(1:2,:))./ ...
 %    (((cameraMatrix(IntrinsicMat,rotationMatrix(RT(1:3)),RT(4:6)'))' * C3)(3,:)) ) .^2, 10000))
 
-IM = IntrinsicMat;
-C2 = h2d;
-C3 = h3d;
+fold = @(h) h(1:2,:)./h(3,:);
+ft = @(RT, A, C3, C2) sum(sum(max(...
+    (fold(A*(rotationMatrix(RT(1:3)) * C3 + RT(4:6)')) - C2).^2)),...
+    10000);
 
-[refined, emin] = fminsearch(@(RT) eFromRT(RT, IM, C2, C3), RTinput);
+IM = IntrinsicMat;
+A = IM.IntrinsicMatrix;
+C2 = h2d;
+C3 = h3d(1:3,:);
+
+ft(RTinput, A, C3, C2);
+[refined, emin] = fminsearch(@(RT) ft(RT, A, C3, C2), RTinput);
 
     
