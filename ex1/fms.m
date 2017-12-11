@@ -1,49 +1,30 @@
-%% Try to use fminsearch to refine RT
+% Try using fminsearch to refine RT
+
+%% Define function ft to minimize
+cm = @(RT, A) cameraMatrix(A, rotationMatrix(RT(1:3)), RT(4:6)');
+fold = @(h) h(1:2,:)./h(3,:);
+ft = @(RT, A, C3, C2) sum(sum(max(...
+    (fold(cm(RT,A)' * C3) - C2).^2)),...
+    10000);
+
+%% Get the initial pose and the other parameters
 my_image = 9760;
 poses_prefix = 'poses/DSC_';
 coor_prefix = 'poses/2D3D_';
 bestM = (importdata(strcat(poses_prefix,int2str(my_image),'.csv')));
 data = (importdata(strcat(coor_prefix,int2str(my_image),'.csv')));
 [RR,TT]= cameraPoseToExtrinsics(bestM(1:3,:),bestM(4,:)');
-RTinput=[exponentialMap(RR),TT];
-h2d = data(1:2,:);
-h3d = data(3:5,:);
-h3d(4,:) = 1;
-sizen=size(data);
-n=sizen(2);
 f = 2960.37845;
 cx = 1841.68855;
 cy = 1235.23369;
-IntrinsicMat=cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
-RTinput;
 
-% (following comment from fminsearch code, ls 48-52)
-%     FUN can be a parameterized function. Use an anonymous function to
-%     capture the problem-dependent parameters:
-%        f = @(x,c) x(1).^2+c.*x(2).^2;  % The parameterized function.
-%        c = 1.5;                        % The parameter.
-%        X = fminsearch(@(x) f(x,c),[0.3;1])
+RTinput = [exponentialMap(RR),TT];
+C2 = data(1:2,:);
+C3 = data(3:5,:);
+C3(4,:) = 1;
+A = cameraIntrinsics([f,f],[cx,cy],[3680,2456]);
 
-% ff = @(x,cc) x(1).^2+cc.*x(2).^2;
-% cc = 1.5;
-% X = fminsearch(@(x) ff(x,cc),[0.3;1]) % Their example works ...
-
-% fun = @(RT, IM, C2, C3) eFromRT(RT, IM, C2, C3);
-
-% boloss = @(RT, IM, C2, C3) ... % Doomed
-%    sum(min(( (((cameraMatrix(IntrinsicMat,rotationMatrix(RT(1:3)),RT(4:6)'))' * C3)(1:2,:))./ ...
-%    (((cameraMatrix(IntrinsicMat,rotationMatrix(RT(1:3)),RT(4:6)'))' * C3)(3,:)) ) .^2, 10000))
-
-fold = @(h) h(1:2,:)./h(3,:);
-ft = @(RT, A, C3, C2) sum(sum(max(...
-    (fold(A*(rotationMatrix(RT(1:3)) * C3 + RT(4:6)')) - C2).^2)),...
-    10000);
-
-IM = IntrinsicMat;
-A = IM.IntrinsicMatrix;
-C2 = h2d;
-C3 = h3d(1:3,:);
-
+%% Test fms!
 RTinput, ft(RTinput, A, C3, C2)
 [refined, emin] = fminsearch(@(RT) ft(RT, A, C3, C2), RTinput)
     
