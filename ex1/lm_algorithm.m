@@ -8,11 +8,12 @@
 %this is the main function we want to use`
 function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
 
+    %% Load data, set parameters
     h2d = data(1:2,:);
     h3d = data(3:5,:);
     h3d(4,:) = 1;
     %h2d(3,:) = 1;
-    disp(size(data))
+    %disp(size(data))
     sizen=size(data);
     n=sizen(2);
     f = 2960.37845;
@@ -23,22 +24,23 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
     u = tau + 1;
     lambda = 0.001;
     tukey = 100;
+    
+    %% Compute initial energy
     RT= RTinput;
     R = rotationMatrix(RT(1:3));
     T = RT(4:6)';
             
-    [dRr1,dRr2,dRr3] = mydRr(R);
     E = eye(3,3);
     I = eye(6,6);
-            
+    
     [rm,tv] = cameraPoseToExtrinsics(R,T);
     camMatrix = cameraMatrix(IntrinsicMat,rm,tv);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
-    [e,inliers] = energy(m,data(1:2,:),tukey,1);
+    [e,~] = energy(m,data(1:2,:),tukey,1);
+            
     for t=1:n_iters 
         if u > tau
-            
             %% compute J
             J =[];
             % derivative of R
@@ -53,19 +55,17 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
             
                 dm = [1/m_homo(3,i), 0, -m_homo(1,i)/m_homo(3,i)^2; ...
                       0, 1/m_homo(3,i), -m_homo(2,i)/m_homo(3,i)^2];
-                J((2*i-1):(2*i),:) = dm * IntrinsicMat.IntrinsicMatrix * dMp;
+                J((2*i-1):(2*i),:) = dm * (IntrinsicMat.IntrinsicMatrix) * dMp;
             end
             
-            %% compute enregy
-            [EforJ,~] = energy(m,data(1:2,:),tukey,0);
-            sqrtE = sqrt(EforJ');
-            
             %% compute and apply change to the solution
+            sqrtE = sqrt(e');
             Delta = -inv(J' * J + lambda * I)*(J' * sqrtE);
             RT = RT + Delta';
             R = rotationMatrix(RT(1:3));
             T = RT(4:6)';
-            
+            %J
+            %JJ = J' * J
             % compute new energy
             [rm,tv] = cameraPoseToExtrinsics(R,T);
             camMatrix = cameraMatrix(IntrinsicMat,rm,tv);

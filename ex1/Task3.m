@@ -22,7 +22,7 @@ bestM = (importdata(strcat(poses_prefix,int2str(my_image),'.csv')));
   %   = [bestR ; bestT]
 data = (importdata(strcat(coor_prefix,int2str(my_image),'.csv')));
   %  = pairs, dim = 2+3 * N
-n_iters = 100;
+n_iters = 2;
 tau = 0.1;
 
 RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)];
