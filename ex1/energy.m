@@ -8,7 +8,7 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
     %   c from slide II.41
     % Output:
-    %  E = sum(M(d(2D,reproj(3D))²))
+    %  E = sum(M(d(2D,reproj(3D))Â²))
     
     %% compute energy
     diff=(h1(1:2,:)-h2(1:2,:));
