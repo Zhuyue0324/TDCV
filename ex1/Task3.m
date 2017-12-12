@@ -34,4 +34,4 @@ RTinput=[exponentialMap(RR),TT];
  % the first pose remains the best :(((
  
 %% Using MATLAB's fminsearch
-
+fms(my_image);
