@@ -34,11 +34,13 @@ end
 disp(strcat('RANSAC done for initial image, nbInliers=',int2str(bestNbInliers)))
 %% LM on first image
 n_iters = 100;
-tau = 0;
+tau = 0.001;
 [Rinit,Tinit]=cameraPoseToExtrinsics(bestR,bestT);
 RTinput=[exponentialMap(Rinit),Tinit];
 [refined, inliers] = lm_algorithm(pairs, RTinput, n_iters, tau);
-simple_save(strcat('tracking/DSC_',int2str(first_image),'.csv'), refined);
+[poseR, poseT]=ExtToPose(rotationMatrix(refined(1:3)),refined(4:6));
+pose=[poseR, poseT'];
+simple_save(strcat('tracking/DSC_',int2str(first_image),'.csv'), pose);
 disp(strcat('LM done for initial, nbInliers=',int2str(inliers)))
 
 %% (TODO still unweighted) LM on following images
@@ -65,10 +67,14 @@ for image=9776:9821
 
     
     %TODO compute e, sigma, w to input to WLM
-    [nextSolution, inliers] = lm_algorithm(pairs, previousSolution, n_iters, tau);
+    [nextSolution, inliers] = lm_algorithm(pairs, previousSolution, n_iters, tau); 
     %TODO update u with |Delta|
-    simple_save(strcat('tracking/DSC_',int2str(image),'.csv'), nextSolution);
-    disp(strcat('LM done for image ',int2str(first_image),...
+   
+    [poseR, poseT]=ExtToPose(rotationMatrix(nextSolution(1:3)),nextSolution(4:6));
+    pose=[poseR, poseT'];
+    
+    simple_save(strcat('tracking/DSC_',int2str(image),'.csv'), pose);
+    disp(strcat('LM done for image ',int2str(image),...
         ', nbInliers=',int2str(inliers)))
 
 end
