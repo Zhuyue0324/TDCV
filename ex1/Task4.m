@@ -76,5 +76,12 @@ for image=9776:9821
     simple_save(strcat('tracking/DSC_',int2str(image),'.csv'), pose);
     disp(strcat('LM done for image ',int2str(image),...
         ', nbInliers=',int2str(inliers)))
+end
 
+%% b) Visualize camera trajectory
+figure;
+for image=9776:9804
+    RT = importdata(strcat('tracking/DSC_',int2str(image),'.csv'))
+    plotCamera('Location',RT(1:3,:),'Orientation',RT(4,:),'Size',20);hold on
+    hold on
 end
