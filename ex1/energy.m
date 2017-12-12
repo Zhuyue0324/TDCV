@@ -8,8 +8,8 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
     %   c from slide II.41
     % Output:
-    %  E. the lecture says we could use min(1,x²) too but this is the
-    %   proper Tukey estimator, 1|1-(1-x²)^3|1.
+    %  E. the lecture says we could use min(1,xÂ²) too but this is the
+    %   proper Tukey estimator, 1|1-(1-xÂ²)^3|1.
     %  nbInliers is the number of points for which we took the non-flat
     %   value
     
@@ -25,8 +25,8 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     nbInliers = 0;
     for i=1:n
         e = rho(diff(:,i),tTukey);
-        E(2*i-1) = e;
-        E(2*i) = e; % not quite sure separating both dimensions is legit ...
+        E(2*i-1) = e/2;
+        E(2*i) = e/2; % not quite sure separating both dimensions is legit ...
         if(e < tTukey^2 / 6.)
             nbInliers = nbInliers + 1;
         end
@@ -39,11 +39,11 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
 
 function [e] = rho(x, c)
     sc = c^2;
-    sx = x(1)^2 + x(2)^2;
+    sx = x(1) + x(2);
     r = 1;
     if sx <= sc
-        r = 1. - (1. - (sx/sc))^3;
+        r=sx/sc; %r = 1. - (1. - (sx/sc))^3;
     end
-    e = r * sc / 6.;
+    e = r * sc; %/ 6.;
         
 
