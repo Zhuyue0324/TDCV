@@ -4,15 +4,6 @@
 config
 run(strcat(matlabpath,'vlfeat-0.9.20/toolbox/vl_setup'));
 
-%% testing w<->R => ok :D
-R1 = [1.,0.,0.;...
-     0.,0.,-1.;...
-     0.,1.,0.];
-R2 = [-0.216271,	-0.896039,	-0.387739;...
-       0.223404,	 0.341184,	-0.913063;...
-       0.95043 ,	-0.284091,	 0.12639 ]; % taken from poses
- 
-r = rotationMatrix(exponentialMap(R2));
 
 %% Load the data
 my_image = 9760;
@@ -24,14 +15,11 @@ data = (importdata(strcat(coor_prefix,int2str(my_image),'.csv')));
   %  = pairs, dim = 2+3 * N
 n_iters = 100;
 tau = 0.001;
-%%%%%%%%%%%%%%%%%%%%%
 [RR,TT]= cameraPoseToExtrinsics(bestM(1:3,:),bestM(4,:)');
-%%%%%%%%%%%%%%%%%%%%%
 RTinput=[exponentialMap(RR),TT];
 
-%RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)];
+% Displays first and last E
 [refined, inliers] = lm_algorithm(data, RTinput, n_iters, tau);
- % the first pose remains the best :(((
  
 %% Using MATLAB's fminsearch
 fms(my_image);

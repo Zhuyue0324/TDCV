@@ -28,7 +28,7 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
     %% Compute initial energy
     RT= RTinput;
     
-    disp(RT)
+    %disp(RT)
     R = rotationMatrix(RT(1:3));
     T = RT(4:6)';
             
@@ -39,8 +39,9 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
     camMatrix = cameraMatrix(IntrinsicMat,R,T);
     m_homo =  camMatrix' * h3d;
     m = (m_homo(1:2,:)./m_homo(3,:));
-    [e,~] = energy(m,h2d,tukey,1);
-    disp(sum(e))
+    [e,~] = energy(m,h2d,tukey,0);
+    firstE = sum(e);
+    %disp(sum(e))
     for t=1:n_iters 
         if u > tau
             %% compute J
@@ -73,15 +74,15 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
             camMatrix = cameraMatrix(IntrinsicMat,Rnew,Tnew);
             m_homo =  camMatrix' * h3d;
             m = (m_homo(1:2,:)./m_homo(3,:));
-            [enew,inliers] = energy(m,h2d,tukey,1);
+            [enew,inliers] = energy(m,h2d,tukey,0);
              %since we don't reverse the change, e should be updated anyway!
             
             %% update lambda (toggle between SGD and GN)
             if norm(enew,1) > norm(e, 1)
                 lambda = 10 * lambda;
                 
-                disp(RTnew)
-                disp(sum(enew))
+                %disp(RTnew)
+                %disp(sum(enew))
             else
                 lambda = 0.1 * lambda;
                 RT=RTnew;
@@ -91,14 +92,16 @@ function[refinedRT, inliers] = lm_algorithm(data, RTinput, n_iters, tau)
             end
             
             u = norm(Delta);
-            disp(u-tau)
-            disp(RT)
-            disp(sum(e))
+            %disp(u-tau)
+            %disp(RT)
+            %disp(sum(e))
             
         else
             break
         end
     end
+    lastE = sum(e);
+    [firstE,lastE]
     refinedRT = RT;
 
     %%Compute derivative of 3D rotation in exponential coordinates    
