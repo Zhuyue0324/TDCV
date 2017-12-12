@@ -69,7 +69,8 @@ for image=9776:9821
     %TODO compute e, sigma, w to input to WLM
     [nextSolution, inliers] = lm_algorithm(pairs, previousSolution, n_iters, tau); 
     %TODO update u with |Delta|
-   
+    previousSolution = nextSolution;
+    
     [poseR, poseT]=ExtToPose(rotationMatrix(nextSolution(1:3)),nextSolution(4:6));
     pose=[poseR, poseT'];
     
@@ -82,6 +83,6 @@ end
 figure;
 for image=9776:9804
     RT = importdata(strcat('tracking/DSC_',int2str(image),'.csv'))
-    plotCamera('Location',RT(1:3,:),'Orientation',RT(4,:),'Size',20);hold on
+    plotCamera('Location',RT(:,1:3)','Orientation',reshape(RT(:,4),1,[]),'Size',20);
     hold on
 end
