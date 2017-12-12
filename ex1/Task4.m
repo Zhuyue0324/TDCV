@@ -28,15 +28,15 @@ for i = 1:size(matches,2)
     pairs = [pairs , [C2D;C3D]];
 end
 [output, bestR, bestT, bestNbInliers] = myransac(pairs,10,100,300);
-bestM = [bestR;bestT];
+%bestM = [bestR;bestT];
 %simple_save(strcat('poses/2D3D_',int2str(my_image),'.csv'), pairs);
 %simple_save(strcat('poses/DSC_',int2str(my_image),'.csv'), bestM);
 disp(strcat('RANSAC done for initial image, nbInliers=',int2str(bestNbInliers)))
 %% LM on first image
 n_iters = 100;
-tau = 0.1;
-
-RTinput=[exponentialMap(bestM(1:3,:)),bestM(4,:)];
+tau = 0;
+[Rinit,Tinit]=cameraPoseToExtrinsics(bestR,bestT);
+RTinput=[exponentialMap(Rinit),Tinit];
 [refined, inliers] = lm_algorithm(pairs, RTinput, n_iters, tau);
 simple_save(strcat('tracking/DSC_',int2str(first_image),'.csv'), refined);
 disp(strcat('LM done for initial, nbInliers=',int2str(inliers)))
