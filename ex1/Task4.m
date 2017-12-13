@@ -83,6 +83,6 @@ end
 figure;
 for image=9776:9804
     RT = importdata(strcat('tracking/DSC_',int2str(image),'.csv'))
-    plotCamera('Orientation',RT(:,1:3)','Location',reshape(RT(:,4),1,[]),'Size',0.01);
+    plotCamera('Location',RT(:,1:3)','Orientation',reshape(RT(:,4),1,[]),'Size',20);
     hold on
 end
