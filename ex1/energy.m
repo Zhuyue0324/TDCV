@@ -8,16 +8,6 @@ function [E, nbInliers] = energy(h1,h2,tTukey, show) %
     %  tTukey is the threshold at which we flatten the Tukey estimator, ie.
     %   c from slide II.41
     % Output:
-<<<<<<< HEAD
-    %  E = sum(M(d(2D,reproj(3D))?))
-    
-    %% compute energy
-    diff=(h1(1:2,:)-h2(1:2,:));
-    reprojectionError=(diff(1,:).^2)+(diff(2,:).^2);
-    maxxed = max(reprojectionError,tTukey^2);
-    E = sum(maxxed)/2; % unnecessary constant comes from the lecture 
-end
-=======
     %  E. the lecture says we could use min(1,x²) too but this is the
     %   proper Tukey estimator, 1|1-(1-x²)^3|1.
     %  nbInliers is the number of points for which we took the non-flat
@@ -56,5 +46,4 @@ function [e] = rho(x, c)
     end
     e = r * sc; %/ 6.;
         
->>>>>>> 40fb3fbc993a4e3840df849908ef6fad8f797360
 
