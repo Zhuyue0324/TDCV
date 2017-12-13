@@ -12,8 +12,6 @@
 %   that of the projection of their supposed 3D model)
 % - RANSAC returns the world pose: we're done.
 
-% Currently I write the code for one particular image, it should be easy to
-% change it into a for loop when all is done and good :) -- thomas
 
 %% Config
 % Set up local paths
