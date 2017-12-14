@@ -3,6 +3,6 @@ function [] = initialAlignment(inputpath, outputpath, associateVertices)
   imshow(init1);
   [n] = size(associateVertices);
   [x,y]=ginput(n(2));
-  mysave(outputpath,x,y,associateVertices);
+  % mysave(outputpath,x,y,associateVertices);
 end
 

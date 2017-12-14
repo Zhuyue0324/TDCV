@@ -40,14 +40,14 @@ RTinput=[exponentialMap(Rinit),Tinit];
 [refined, inliers] = lm_algorithm(pairs, RTinput, n_iters, tau);
 [poseR, poseT]=ExtToPose(rotationMatrix(refined(1:3)),refined(4:6));
 pose=[poseR, poseT'];
-simple_save(strcat('tracking/DSC_',int2str(first_image),'.csv'), pose);
-disp(strcat('LM done for initial, nbInliers=',int2str(inliers)))
+%simple_save(strcat('tracking/DSC_',int2str(first_image),'.csv'), pose);
+disp(strcat('LM done for initial image'))
 
 %% (TODO still unweighted) LM on following images
 previousSolution = refined;
 lambda = 1e-3;
-tau = 1 % ???
-u = tau + 1
+tau = 1; % ???
+u = tau + 1;
 for image=9776:9821
     if u <= tau
         % already diverged too much ?
@@ -74,9 +74,9 @@ for image=9776:9821
     [poseR, poseT]=ExtToPose(rotationMatrix(nextSolution(1:3)),nextSolution(4:6));
     pose=[poseR, poseT'];
     
-    simple_save(strcat('tracking/DSC_',int2str(image),'.csv'), pose);
+    %simple_save(strcat('tracking/DSC_',int2str(image),'.csv'), pose);
     disp(strcat('LM done for image ',int2str(image),...
-        ', nbInliers=',int2str(inliers)))
+        '.'))
 end
 
 %% b) Visualize camera trajectory

@@ -25,7 +25,6 @@ for my_image = 9751:9774
     % fms(my_image);
     
     %% Save the refined poses
-    simple_save(strcat('poses/refined_',int2str(my_image),'.csv'), bestM);
-    disp(strcat('Saved refined model for image ',int2str(my_image),...
-        ', nbInliers=',int2str(inliers)))
+    %simple_save(strcat('poses/refined_',int2str(my_image),'.csv'), bestM);
+    disp(strcat('Didn''t save refined model for image ',int2str(my_image)))
 end
