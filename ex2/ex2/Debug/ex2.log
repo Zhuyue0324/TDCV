@@ -1,0 +1,4 @@
+﻿  stdafx.cpp
+  ex2.cpp
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(6): fatal error C1083: Impossible d'ouvrir le fichier include : 'opencv2/core.hpp' : No such file or directory
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(361,5): error MSB6006: Arrêt de "CL.exe" avec le code 2.

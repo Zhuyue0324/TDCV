@@ -1,0 +1,20 @@
+﻿  ex2.cpp
+ex2.cpp(69): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+ex2.cpp(163): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+ex2.cpp(164): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+ex2.cpp(174): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+ex2.cpp(175): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+ex2.cpp(385): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+ex2.cpp(388): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+ex2.cpp(389): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+ex2.cpp(390): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+ex2.cpp(451): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+ex2.cpp(556): warning C4554: '&' : vérifiez la priorité des opérateurs comme cause possible d'erreur ; utilisez des parenthèses pour rendre plus claires les priorités
+ex2.cpp(726): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+ex2.cpp(792): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  Génération de code en cours
+  9 of 786 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  ex2.vcxproj -> C:\Users\thomala\Documents\TDCV-master\TDCV\ex2\x64\Release\ex2.exe
