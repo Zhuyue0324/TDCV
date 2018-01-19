@@ -1,3 +1,21 @@
-﻿  stdafx.cpp
-  ex2.cpp
+﻿  ex2.cpp
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(70): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(164): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(165): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(175): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(176): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(414): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(417): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(418): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(419): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(480): warning C4305: 'initialisation' : troncation de 'double' à 'float'
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(824): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(838): warning C4244: 'argument' : conversion de 'double' en 'const int', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(892): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(522): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(534): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(524): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(535): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(526): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
+c:\users\thomala\documents\tdcv-master\tdcv\ex2\ex2\ex2.cpp(527): warning C4172: retourne l'adresse d'une variable locale ou  temporaire
   ex2.vcxproj -> C:\Users\thomala\Documents\TDCV-master\TDCV\ex2\x64\Debug\ex2.exe
