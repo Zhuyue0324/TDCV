@@ -17,4 +17,5 @@ using namespace std;
 
 float my_random(int N);
 void augment(const cv::String &inputfilename, const cv::String &inputpath, const cv::String &outputpath);
+void augment_MC(const cv::String &inputfilename, const cv::String &inputpath, const cv::String &outputpath);
 int data_aug(string firstpart, bool verbose);
