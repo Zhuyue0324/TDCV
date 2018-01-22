@@ -118,12 +118,8 @@ void augment(const cv::String &inputfilename, const cv::String &inputpath, const
 
 
 		//output
-		if (i < 10) {
-			imwrite(outputpath + inputfilename + "0" + to_string(i) + ".jpg", output);
-		}
-		else {
-			imwrite(outputpath + inputfilename + to_string(i) + ".jpg", output);
-		}
+		imwrite(outputpath + inputfilename + to_string(i) + ".jpg", output);
+		
 
 	}
 }
