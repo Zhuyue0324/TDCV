@@ -125,13 +125,10 @@ void augment(const cv::String &inputfilename, const cv::String &inputpath, const
 }
 
 void augment_MC(const cv::String &inputfilename, const cv::String &inputpath, const cv::String &outputpath) {
-	// Augment with Monte-Carlo strategy
+	// Augment with Monte-Carlo strategy ==> abandoned
 	Mat img = imread(inputpath + "0" + inputfilename + ".jpg");
 	Mat RM;
 	Mat output;
-	//float ran, ran1, ran2, ran3, ran4, ran5, ran6;
-	//vector<Point2f> pts1;
-	//vector<Point2f> pts2;
 	int nbexamples = 10;
 
 	imwrite(outputpath + inputfilename + "0.jpg", img);
@@ -161,22 +158,8 @@ void augment_MC(const cv::String &inputfilename, const cv::String &inputpath, co
 		RM = getAffineTransform(base, goal);
 		warpAffine(output, output, RM, Point((int(output.cols), int(output.rows))), 1,
 			cv::BORDER_REPLICATE, cv::Scalar(255, 255, 255));
-	/*
-		circle(output, base[0], 2, Scalar(0, 255, 0));
-		circle(output, base[1], 2, Scalar(0, 255, 0));
-		circle(output, base[2], 2, Scalar(0, 255, 0));
-		circle(output, goal[0], 2, Scalar(0, 0, 255));
-		circle(output, goal[1], 2, Scalar(0, 0, 255));
-		circle(output, goal[2], 2, Scalar(0, 0, 255));
-	*/	
-		//output
-		/*if (i < 10) {
-			imwrite(outputpath + inputfilename + "0" + to_string(i) + ".jpg", output);
-		}
-		else {*/
-			imwrite(outputpath + inputfilename + to_string(i) + ".jpg", output);
-		//}
-
+	
+		imwrite(outputpath + inputfilename + to_string(i) + ".jpg", output);
 	}
 }
 
@@ -188,7 +171,7 @@ int data_aug(string firstpart, bool verbose) {
 		string inputpath = firstpart + lastpart + to_string(i) + "/";
 		string outputpath = firstpart + "aug/" + lastpart + to_string(i) + "/";
 		if (verbose) {
-			cout << "FOLDER " << lastpart << i << endl;
+			cout << "FOLDER " << lastpart << i << "\t\t\t\t\t\t" << endl;
 		}
 		for (int j = 0; j < nums[i]; j++) {
 			if (j < 10) {
@@ -201,9 +184,8 @@ int data_aug(string firstpart, bool verbose) {
 				inputfilename = "" + to_string(j);
 			}
 			if (verbose) {
-				cout << "  augmenting " << inputfilename + ".jpg" << endl;
+				cout << "  augmenting " << inputfilename + ".jpg\r" << flush;
 			}
-			//imshow("test", imread(inputpath+inputfilename + ".jpg", 1));
 			augment(inputfilename, inputpath, outputpath);
 		}
 	}

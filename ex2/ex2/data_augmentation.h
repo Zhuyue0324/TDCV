@@ -15,6 +15,23 @@
 using namespace cv;
 using namespace std;
 
+/*
+Functions to augment the data, called from the main in mode 0
+Folder hierarchy need to at least contain:
+[Mother of folder we want to augment]
+|-train [folder we want to augment]
+|  |-00
+|  |-01
+|  |-02
+|  `-03
+`-aug
+   `-train
+      |-00
+      |-01
+      |-02
+      `-03
+*/
+
 float my_random(int N);
 void augment(const cv::String &inputfilename, const cv::String &inputpath, const cv::String &outputpath);
 void augment_MC(const cv::String &inputfilename, const cv::String &inputpath, const cv::String &outputpath);
