@@ -1,1 +1,1 @@
-Thomas is cool
+This is exercise 3, where we use a small LeNet to classify and find the pose of 3D objects.
